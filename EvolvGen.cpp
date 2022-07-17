@@ -2,17 +2,17 @@
 
 #include "EvolvGen.h"
 
-//Преобразование и анализ типов данных.
+//РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ Рё Р°РЅР°Р»РёР· С‚РёРїРѕРІ РґР°РЅРЅС‹С….
 namespace DUBLIB {
 
-	//Преобразование целочисленного значения в строковое (ASCII).
+	//РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ С†РµР»РѕС‡РёСЃР»РµРЅРЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ РІ СЃС‚СЂРѕРєРѕРІРѕРµ (ASCII).
 	std::string ConvertNumberToString(int Value) {
 		std::stringstream Out;
 		Out << Value;
 		return Out.str();
 	}
 
-	//Преобразовывает std::string в std::wstring.
+	//РџСЂРµРѕР±СЂР°Р·РѕРІС‹РІР°РµС‚ std::string РІ std::wstring.
 	std::wstring ToWstring(std::string Str) {
 		std::wstring to_wstring(Str.begin(), Str.end());
 		return to_wstring;
@@ -20,34 +20,34 @@ namespace DUBLIB {
 
 }
 
-//Работа со строками.
+//Р Р°Р±РѕС‚Р° СЃРѕ СЃС‚СЂРѕРєР°РјРё.
 namespace DUBLIB {
 
-	//Удаляет указанное число символов с начала строки (ASCII).
+	//РЈРґР°Р»СЏРµС‚ СѓРєР°Р·Р°РЅРЅРѕРµ С‡РёСЃР»Рѕ СЃРёРјРІРѕР»РѕРІ СЃ РЅР°С‡Р°Р»Р° СЃС‚СЂРѕРєРё (ASCII).
 	std::string DeleteFirstCharacters(std::string Str, unsigned int Amount) {
 		Str.erase(0, Amount);
 		return Str;
 	}
 
-	//Удаляет указанное число символов с начала строки (Unicode).
+	//РЈРґР°Р»СЏРµС‚ СѓРєР°Р·Р°РЅРЅРѕРµ С‡РёСЃР»Рѕ СЃРёРјРІРѕР»РѕРІ СЃ РЅР°С‡Р°Р»Р° СЃС‚СЂРѕРєРё (Unicode).
 	std::wstring DeleteFirstCharacters(std::wstring Str, unsigned int Amount) {
 		Str.erase(0, Amount);
 		return Str;
 	}
 
-	//Удаляет указанное число символов с конца строки (ASCII).
+	//РЈРґР°Р»СЏРµС‚ СѓРєР°Р·Р°РЅРЅРѕРµ С‡РёСЃР»Рѕ СЃРёРјРІРѕР»РѕРІ СЃ РєРѕРЅС†Р° СЃС‚СЂРѕРєРё (ASCII).
 	std::string DeleteLastCharacters(std::string Str, unsigned int Amount) {
 		for (unsigned int i = 0; i < Amount; i++) if (Str.length() != 0) Str.pop_back();
 		return Str;
 	}
 
-	//Удаляет указанное число символов с конца строки (Unicode).
+	//РЈРґР°Р»СЏРµС‚ СѓРєР°Р·Р°РЅРЅРѕРµ С‡РёСЃР»Рѕ СЃРёРјРІРѕР»РѕРІ СЃ РєРѕРЅС†Р° СЃС‚СЂРѕРєРё (Unicode).
 	std::wstring DeleteLastCharacters(std::wstring Str, unsigned int Amount) {
 		for (unsigned int i = 0; i < Amount; i++) if (Str.length() != 0) Str.pop_back();
 		return Str;
 	}
 
-	//Удаляет пробелы и символы табуляции из начала и конца строки (ASCII).
+	//РЈРґР°Р»СЏРµС‚ РїСЂРѕР±РµР»С‹ Рё СЃРёРјРІРѕР»С‹ С‚Р°Р±СѓР»СЏС†РёРё РёР· РЅР°С‡Р°Р»Р° Рё РєРѕРЅС†Р° СЃС‚СЂРѕРєРё (ASCII).
 	std::string Trim(std::string Str) {
 		bool Stop = false;
 		while (Str.length() > 0 && !Stop) {
@@ -60,7 +60,7 @@ namespace DUBLIB {
 		return Str;
 	}
 
-	//Удаляет пробелы и символы табуляции из начала и конца строки (Unicode).
+	//РЈРґР°Р»СЏРµС‚ РїСЂРѕР±РµР»С‹ Рё СЃРёРјРІРѕР»С‹ С‚Р°Р±СѓР»СЏС†РёРё РёР· РЅР°С‡Р°Р»Р° Рё РєРѕРЅС†Р° СЃС‚СЂРѕРєРё (Unicode).
 	std::wstring Trim(std::wstring Str) {
 		bool Stop = false;
 		while (Str.length() > 0 && !Stop) {
@@ -73,21 +73,21 @@ namespace DUBLIB {
 		return Str;
 	}
 
-	//Обрезает строку до указанной длины (ASCII). 
+	//РћР±СЂРµР·Р°РµС‚ СЃС‚СЂРѕРєСѓ РґРѕ СѓРєР°Р·Р°РЅРЅРѕР№ РґР»РёРЅС‹ (ASCII). 
 	std::string CutToLength(std::string Str, unsigned int Length) {
 		std::string Bufer;
 		for (unsigned int i = 0; i < Str.length(); i++) if (i != Length) Bufer.push_back(Str[i]); else return Bufer;
 		return Str;
 	}
 
-	//Обрезает строку до указанной длины (Unicode). 
+	//РћР±СЂРµР·Р°РµС‚ СЃС‚СЂРѕРєСѓ РґРѕ СѓРєР°Р·Р°РЅРЅРѕР№ РґР»РёРЅС‹ (Unicode). 
 	std::wstring CutToLength(std::wstring Str, unsigned int Length) {
 		std::wstring Bufer;
 		for (unsigned int i = 0; i < Str.length(); i++) if (i != Length) Bufer.push_back(Str[i]); else return Bufer;
 		return Str;
 	}
 
-	//Проверяет посимвольно соответствие первой строки второй строке. Если первая строка длиннее второй, то усекает её до одинаковой длины (ASCII).
+	//РџСЂРѕРІРµСЂСЏРµС‚ РїРѕСЃРёРјРІРѕР»СЊРЅРѕ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ РїРµСЂРІРѕР№ СЃС‚СЂРѕРєРё РІС‚РѕСЂРѕР№ СЃС‚СЂРѕРєРµ. Р•СЃР»Рё РїРµСЂРІР°СЏ СЃС‚СЂРѕРєР° РґР»РёРЅРЅРµРµ РІС‚РѕСЂРѕР№, С‚Рѕ СѓСЃРµРєР°РµС‚ РµС‘ РґРѕ РѕРґРёРЅР°РєРѕРІРѕР№ РґР»РёРЅС‹ (ASCII).
 	bool CheckForSimilarity(std::string FirstStr, std::string SecondStr) {
 		if ((unsigned int)FirstStr.length() > (unsigned int)SecondStr.length()) CutToLength(FirstStr, (unsigned int)SecondStr.length());
 		for (unsigned int i = 0; i < FirstStr.length(); i++) if (SecondStr[i] != FirstStr[i]) return false;
@@ -95,7 +95,7 @@ namespace DUBLIB {
 
 	}
 
-	//Проверяет посимвольно соответствие первой строки второй строке. Если первая строка длиннее второй, то усекает её до одинаковой длины (Unicode).
+	//РџСЂРѕРІРµСЂСЏРµС‚ РїРѕСЃРёРјРІРѕР»СЊРЅРѕ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРµ РїРµСЂРІРѕР№ СЃС‚СЂРѕРєРё РІС‚РѕСЂРѕР№ СЃС‚СЂРѕРєРµ. Р•СЃР»Рё РїРµСЂРІР°СЏ СЃС‚СЂРѕРєР° РґР»РёРЅРЅРµРµ РІС‚РѕСЂРѕР№, С‚Рѕ СѓСЃРµРєР°РµС‚ РµС‘ РґРѕ РѕРґРёРЅР°РєРѕРІРѕР№ РґР»РёРЅС‹ (Unicode).
 	bool CheckForSimilarity(std::wstring FirstStr, std::wstring SecondStr) {
 		if ((unsigned int)FirstStr.length() > (unsigned int)SecondStr.length()) CutToLength(FirstStr, (unsigned int)SecondStr.length());
 		for (unsigned int i = 0; i < (unsigned int)FirstStr.length(); i++) if (SecondStr[i] != FirstStr[i]) return false;
@@ -105,17 +105,17 @@ namespace DUBLIB {
 
 }
 
-//Математические функции.
+//РњР°С‚РµРјР°С‚РёС‡РµСЃРєРёРµ С„СѓРЅРєС†РёРё.
 namespace DUBLIB {
 
-	//Возвращает максимальные коэффициенты масштабирования изображения для пропорционального увеличения по оси Y.
+	//Р’РѕР·РІСЂР°С‰Р°РµС‚ РјР°РєСЃРёРјР°Р»СЊРЅС‹Рµ РєРѕСЌС„С„РёС†РёРµРЅС‚С‹ РјР°СЃС€С‚Р°Р±РёСЂРѕРІР°РЅРёСЏ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РґР»СЏ РїСЂРѕРїРѕСЂС†РёРѕРЅР°Р»СЊРЅРѕРіРѕ СѓРІРµР»РёС‡РµРЅРёСЏ РїРѕ РѕСЃРё Y.
 	sf::Vector2f CalculateScaleY(sf::Vector2u FormSize, sf::Vector2u PictureSize, double DesiredRelatioToForm) {
-		//Отношение текущего размера к максимальному по нужной оси.
+		//РћС‚РЅРѕС€РµРЅРёРµ С‚РµРєСѓС‰РµРіРѕ СЂР°Р·РјРµСЂР° Рє РјР°РєСЃРёРјР°Р»СЊРЅРѕРјСѓ РїРѕ РЅСѓР¶РЅРѕР№ РѕСЃРё.
 		double Relatio = (double)PictureSize.y / (double)FormSize.y;
-		//Во сколько раз отношение меньше желаемого.
+		//Р’Рѕ СЃРєРѕР»СЊРєРѕ СЂР°Р· РѕС‚РЅРѕС€РµРЅРёРµ РјРµРЅСЊС€Рµ Р¶РµР»Р°РµРјРѕРіРѕ.
 		double ScaleY = DesiredRelatioToForm / Relatio;
 
-		//Проверка, не выходит ли ось X за грани формы, иначе повторить те же действия для второй оси.
+		//РџСЂРѕРІРµСЂРєР°, РЅРµ РІС‹С…РѕРґРёС‚ Р»Рё РѕСЃСЊ X Р·Р° РіСЂР°РЅРё С„РѕСЂРјС‹, РёРЅР°С‡Рµ РїРѕРІС‚РѕСЂРёС‚СЊ С‚Рµ Р¶Рµ РґРµР№СЃС‚РІРёСЏ РґР»СЏ РІС‚РѕСЂРѕР№ РѕСЃРё.
 		if (PictureSize.x * ScaleY > FormSize.x - 1) {
 			double Relatio = (double)PictureSize.x / (double)FormSize.x;
 			ScaleY = 1.0 / Relatio;
@@ -126,10 +126,10 @@ namespace DUBLIB {
 
 }
 
-//Методы работы с текстовыми файлами Evolv.
+//РњРµС‚РѕРґС‹ СЂР°Р±РѕС‚С‹ СЃ С‚РµРєСЃС‚РѕРІС‹РјРё С„Р°Р№Р»Р°РјРё Evolv.
 namespace DUBLIB {
 
-	//Возвращает значение первого найденного маркера в файле (ASCII).
+	//Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ РїРµСЂРІРѕРіРѕ РЅР°Р№РґРµРЅРЅРѕРіРѕ РјР°СЂРєРµСЂР° РІ С„Р°Р№Р»Рµ (ASCII).
 	std::string GetMarkeredStringFromFile(std::string File, std::string Marker) {
 		std::ifstream Read;
 		Read.open(File);
@@ -145,7 +145,7 @@ namespace DUBLIB {
 		return Answer;
 	}
 
-	//Возвращает значение первого найденного маркера в файле (Unicode).
+	//Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ РїРµСЂРІРѕРіРѕ РЅР°Р№РґРµРЅРЅРѕРіРѕ РјР°СЂРєРµСЂР° РІ С„Р°Р№Р»Рµ (Unicode).
 	std::wstring GetMarkeredStringFromFile(std::wstring File, std::wstring Marker) {
 		std::wifstream Read;
 		Read.open(File);
@@ -160,7 +160,7 @@ namespace DUBLIB {
 		return Answer;
 	}
 
-	//Возвращает значение первого найденного маркера в файле и форматирует его в bool (ASCII).
+	//Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ РїРµСЂРІРѕРіРѕ РЅР°Р№РґРµРЅРЅРѕРіРѕ РјР°СЂРєРµСЂР° РІ С„Р°Р№Р»Рµ Рё С„РѕСЂРјР°С‚РёСЂСѓРµС‚ РµРіРѕ РІ bool (ASCII).
 	bool GetMarkeredBoolFromFile(std::string File, std::string Marker) {
 		std::ifstream Read;
 		Read.open(File);
@@ -173,15 +173,15 @@ namespace DUBLIB {
 				Read.close();
 			}
 		}
-		//Перевод всех символов в нижний регистр.
+		//РџРµСЂРµРІРѕРґ РІСЃРµС… СЃРёРјРІРѕР»РѕРІ РІ РЅРёР¶РЅРёР№ СЂРµРіРёСЃС‚СЂ.
 		for (unsigned int i = 0; i < Answer.length(); i++) {
 			Answer[i] = tolower(Answer[i]);
 		}
-		//Формирование возвращаемого значения.
+		//Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ РІРѕР·РІСЂР°С‰Р°РµРјРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
 		if (Answer == "true" || Answer == "1") return true; else return false;
 	}
 
-	//Возвращает значение первого найденного маркера в файле и форматирует его в bool (Unicode).
+	//Р’РѕР·РІСЂР°С‰Р°РµС‚ Р·РЅР°С‡РµРЅРёРµ РїРµСЂРІРѕРіРѕ РЅР°Р№РґРµРЅРЅРѕРіРѕ РјР°СЂРєРµСЂР° РІ С„Р°Р№Р»Рµ Рё С„РѕСЂРјР°С‚РёСЂСѓРµС‚ РµРіРѕ РІ bool (Unicode).
 	bool GetMarkeredBoolFromFile(std::wstring File, std::wstring Marker) {
 		std::wifstream Read;
 		Read.open(File);
@@ -194,15 +194,15 @@ namespace DUBLIB {
 				Read.close();
 			}
 		}
-		//Перевод всех символов в нижний регистр.
+		//РџРµСЂРµРІРѕРґ РІСЃРµС… СЃРёРјРІРѕР»РѕРІ РІ РЅРёР¶РЅРёР№ СЂРµРіРёСЃС‚СЂ.
 		for (unsigned int i = 0; i < Answer.length(); i++) {
 			Answer[i] = tolower(Answer[i]);
 		}
-		//Формирование возвращаемого значения.
+		//Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ РІРѕР·РІСЂР°С‰Р°РµРјРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ.
 		if (Answer == L"true" || Answer == L"1") return true; else return false;
 	}
 
-	//Возвращает вектор строк с соответствующим маркером (ASCII).
+	//Р’РѕР·РІСЂР°С‰Р°РµС‚ РІРµРєС‚РѕСЂ СЃС‚СЂРѕРє СЃ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРј РјР°СЂРєРµСЂРѕРј (ASCII).
 	std::vector<std::string> GetMarkeredStringsArrayFromFile(std::string File, std::string Marker) {
 		std::vector<std::string> Bufer;
 
@@ -216,7 +216,7 @@ namespace DUBLIB {
 		return Bufer;
 	}
 
-	//Возвращает вектор строк с соответствующим маркером (Unicode).
+	//Р’РѕР·РІСЂР°С‰Р°РµС‚ РІРµРєС‚РѕСЂ СЃС‚СЂРѕРє СЃ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРј РјР°СЂРєРµСЂРѕРј (Unicode).
 	std::vector<std::wstring> GetMarkeredStringsArrayFromFile(std::wstring File, std::wstring Marker) {
 		std::vector<std::wstring> Bufer;
 
@@ -230,7 +230,7 @@ namespace DUBLIB {
 		return Bufer;
 	}
 
-	//Разбивает строку по вхождению символа на подстроки (ASCII).
+	//Р Р°Р·Р±РёРІР°РµС‚ СЃС‚СЂРѕРєСѓ РїРѕ РІС…РѕР¶РґРµРЅРёСЋ СЃРёРјРІРѕР»Р° РЅР° РїРѕРґСЃС‚СЂРѕРєРё (ASCII).
 	std::vector<std::string> Split(std::string Str, char Marker) {
 		std::string Bufer = "";
 		std::vector<std::string> Lines;
@@ -242,7 +242,7 @@ namespace DUBLIB {
 		return Lines;
 	}
 
-	//Разбивает строку по вхождению символа на подстроки (Unicode).
+	//Р Р°Р·Р±РёРІР°РµС‚ СЃС‚СЂРѕРєСѓ РїРѕ РІС…РѕР¶РґРµРЅРёСЋ СЃРёРјРІРѕР»Р° РЅР° РїРѕРґСЃС‚СЂРѕРєРё (Unicode).
 	std::vector<std::wstring> Split(std::wstring Str, wchar_t Marker) {
 		std::wstring Bufer = L"";
 		std::vector<std::wstring> Lines;
@@ -256,20 +256,20 @@ namespace DUBLIB {
 
 }
 
-//Debug-функции.
+//Debug-С„СѓРЅРєС†РёРё.
 namespace DUBLIB {
 
-	//Выводит в консоль содержимое вектора (std::string).
+	//Р’С‹РІРѕРґРёС‚ РІ РєРѕРЅСЃРѕР»СЊ СЃРѕРґРµСЂР¶РёРјРѕРµ РІРµРєС‚РѕСЂР° (std::string).
 	void PrintVector(std::vector<std::string> Value) {
 		for (unsigned int i = 0; i < Value.size(); i++) Cout << "Element " << i << " : \"" << Value[i] << "\"\n";
 	}
 
-	//Выводит в консоль содержимое вектора (std::wstring).
+	//Р’С‹РІРѕРґРёС‚ РІ РєРѕРЅСЃРѕР»СЊ СЃРѕРґРµСЂР¶РёРјРѕРµ РІРµРєС‚РѕСЂР° (std::wstring).
 	void PrintVector(std::vector<std::wstring> Value) {
 		for (unsigned int i = 0; i < Value.size(); i++) Wout << L"Element " << i << L" : \"" << Value[i] << L"\"\n";
 	}
 
-	//Выводит в консоль содержимое вектора (unsigned int).
+	//Р’С‹РІРѕРґРёС‚ РІ РєРѕРЅСЃРѕР»СЊ СЃРѕРґРµСЂР¶РёРјРѕРµ РІРµРєС‚РѕСЂР° (unsigned int).
 	void PrintVector(std::vector<unsigned int> Value) {
 		for (unsigned int i = 0; i < Value.size(); i++) Cout << "Element " << i << " : \"" << Value[i] << "\"\n";
 	}

@@ -3,13 +3,18 @@
 #include "TechSupport.h"
 #include "Source.h"
 #include "EvolvGen.h"
+#include "GUI.h"
 
 int main(int argc, char* argv[]) {
 
 	SetConsoleCP(CP_UTF8);
 	SetConsoleOutputCP(CP_UTF8);
 
-	sf::RenderWindow MainWindow(sf::VideoMode(1920, 1080 + 1), "Dweller: Legacy Edition", sf::Style::None);
+	KeystrokesProcessing KP(sf::Keyboard::W);
+
+	//sf::RenderWindow MainWindow(sf::VideoMode(1920, 1080 + 1), "Dweller: Legacy Edition", sf::Style::None);
+	sf::RenderWindow MainWindow(sf::VideoMode(1280, 720), "Dweller: Legacy Edition");
+
 	sf::Clock GlobalClock;
 	double GlobalTimeAsSeconds;
 	double GlobalTimeAsMiliseconds;
@@ -17,16 +22,16 @@ int main(int argc, char* argv[]) {
 
 	MainWindow.setVerticalSyncEnabled(false);
 
-	//Установка значка в заголовке окна.
+	//РЈСЃС‚Р°РЅРѕРІРєР° Р·РЅР°С‡РєР° РІ Р·Р°РіРѕР»РѕРІРєРµ РѕРєРЅР°.
 	HICON hicon = LoadIcon(GetModuleHandleA(NULL), MAKEINTRESOURCEW(103));
 	SendMessageA(MainWindow.getSystemHandle(), WM_SETICON, ICON_BIG, (LPARAM)hicon);
 
-	//Создание необходимых объектов игры.
+	//РЎРѕР·РґР°РЅРёРµ РЅРµРѕР±С…РѕРґРёРјС‹С… РѕР±СЉРµРєС‚РѕРІ РёРіСЂС‹.
 	TechSupport ObjTechSupport(&MainWindow, &GlobalTimeAsSeconds);
-	//Intro ObjectIntro(&MainWindow, &GlobalTimeAsSeconds, &GlobalTimeAsMicroseconds);
+	Intro ObjectIntro(&MainWindow, &GlobalTimeAsSeconds, &GlobalTimeAsMicroseconds);
 	Credits ObjectCredits(&MainWindow, &GlobalTimeAsSeconds);
 
-	//ObjectIntro.Start();
+	ObjectIntro.Start();
 
 	while (MainWindow.isOpen()) {
 
@@ -41,9 +46,10 @@ int main(int argc, char* argv[]) {
 		GlobalClock.restart();
 
 		MainWindow.clear();
-		//ObjectIntro.Update();
-		ObjectCredits.Update();
+		ObjectIntro.Update();
+		//ObjectCredits.Update();
 		ObjTechSupport.Update();
+		if (KP.Update()) Cout << 1 << Endl;
 		MainWindow.display();
 	}
 

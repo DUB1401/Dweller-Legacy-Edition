@@ -4,14 +4,14 @@
 // --->CenteredLabel
 //=======================================================================================================================//
 
-//Позиционирование строки по середине блока.
+//РџРѕР·РёС†РёРѕРЅРёСЂРѕРІР°РЅРёРµ СЃС‚СЂРѕРєРё РїРѕ СЃРµСЂРµРґРёРЅРµ Р±Р»РѕРєР°.
 void CenteredLabel::Centering() {
-	//Выравнивание по ширине блока.
+	//Р’С‹СЂР°РІРЅРёРІР°РЅРёРµ РїРѕ С€РёСЂРёРЅРµ Р±Р»РѕРєР°.
 	for (unsigned int i = 0; i < Label.size(); i++) {
 		Label[i].setOrigin(Label[i].getLocalBounds().width / 2, Label[i].getOrigin().y);
 		Label[i].setPosition((float)BlockSize.x / 2.0, Label[i].getPosition().y);
 	}
-	//Расчёт модификатора для выравнивания по высоте блока.
+	//Р Р°СЃС‡С‘С‚ РјРѕРґРёС„РёРєР°С‚РѕСЂР° РґР»СЏ РІС‹СЂР°РІРЅРёРІР°РЅРёСЏ РїРѕ РІС‹СЃРѕС‚Рµ Р±Р»РѕРєР°.
 	float HeightModificator = 0;
 	for (unsigned int i = 0; i < Label.size(); i++) HeightModificator += Label[i].getLocalBounds().height;
 	HeightModificator = BlockSize.y - HeightModificator;
@@ -19,25 +19,18 @@ void CenteredLabel::Centering() {
 	HeightModificator -= LineSpacing * CharacterSize * Label.size();
 	HeightModificator += LineSpacing * CharacterSize;
 	
-	//Простановка координат по оси Y.
+	//РџСЂРѕСЃС‚Р°РЅРѕРІРєР° РєРѕРѕСЂРґРёРЅР°С‚ РїРѕ РѕСЃРё Y.
 	for (unsigned int i = 0; i < Label.size(); i++) {
+		//РњРѕРґРёС„РёРєР°С‚РѕСЂ РјРµР¶СЃС‚СЂРѕС‡РЅРѕРіРѕ РёРЅС‚РµСЂРІР°Р»Р°.
 		float LSC = CharacterSize * LineSpacing;
-		if (i == 0) Label[i].setPosition(Label[i].getPosition().x, HeightModificator - Label[i].getLocalBounds().top);
-		else Label[i].setPosition(Label[i].getPosition().x, Label[i - 1].getPosition().y + Label[i - 1].getLocalBounds().height + LSC);
-	}
 
-	/*
-	//Простановка координат по оси Y.
-	for (unsigned int i = 0; i < Label.size(); i++) {
-		float LSC = CharacterSize * LineSpacing * i;
-		if (i == 0) Label[i].setPosition(Label[i].getPosition().x, HeightModificator - Label[i].getLocalBounds().top);
-		else Label[i].setPosition(Label[i].getPosition().x, LSC + HeightModificator - Label[i].getLocalBounds().top + CharacterSize * i);
+		if (i == 0) Label[i].setPosition(Label[i].getPosition().x + Position.x, HeightModificator - Label[i].getLocalBounds().top + Position.y);
+		else Label[i].setPosition(Label[i].getPosition().x + Position.x, Label[i - 1].getPosition().y + Label[i - 1].getLocalBounds().height + LSC + Position.y);
 	}
-	*/
 
 }
 
-//Применение стиля ко всем спрайтам надписи.
+//РџСЂРёРјРµРЅРµРЅРёРµ СЃС‚РёР»СЏ РєРѕ РІСЃРµРј СЃРїСЂР°Р№С‚Р°Рј РЅР°РґРїРёСЃРё.
 void CenteredLabel::AppendStyle() {
 	for (unsigned int i = 0; i < Label.size(); i++) {
 		Label[i].setFont(*TextFont);
@@ -47,59 +40,59 @@ void CenteredLabel::AppendStyle() {
 	}
 }
 
-//Конструктор: пустой.
+//РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ: РїСѓСЃС‚РѕР№.
 CenteredLabel::CenteredLabel() {
 
 }
 
-//Задаёт окно отрисовки, центрируемую строку и размеры блока отображения. Вызывать после установки всех стилей.
+//Р—Р°РґР°С‘С‚ РѕРєРЅРѕ РѕС‚СЂРёСЃРѕРІРєРё, С†РµРЅС‚СЂРёСЂСѓРµРјСѓСЋ СЃС‚СЂРѕРєСѓ Рё СЂР°Р·РјРµСЂС‹ Р±Р»РѕРєР° РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ. Р’С‹Р·С‹РІР°С‚СЊ РїРѕСЃР»Рµ СѓСЃС‚Р°РЅРѕРІРєРё РІСЃРµС… СЃС‚РёР»РµР№.
 void CenteredLabel::Initialize(sf::RenderWindow* MainWindow, std::wstring Str, sf::Vector2u BlockSize) {
 
-	//---> Передача аргументов.
+	//---> РџРµСЂРµРґР°С‡Р° Р°СЂРіСѓРјРµРЅС‚РѕРІ.
 	//=======================================================================================================================//
 	this->MainWindow = MainWindow;
 	this->Str = Str;
 	this->BlockSize = BlockSize;
 
-	//---> Генерация буферов и обработка разделения строчек.
+	//---> Р“РµРЅРµСЂР°С†РёСЏ Р±СѓС„РµСЂРѕРІ Рё РѕР±СЂР°Р±РѕС‚РєР° СЂР°Р·РґРµР»РµРЅРёСЏ СЃС‚СЂРѕС‡РµРє.
 	//=======================================================================================================================//
-	//Буферный текст SFML для расчёта величины надписи.
+	//Р‘СѓС„РµСЂРЅС‹Р№ С‚РµРєСЃС‚ SFML РґР»СЏ СЂР°СЃС‡С‘С‚Р° РІРµР»РёС‡РёРЅС‹ РЅР°РґРїРёСЃРё.
 	sf::Text TextBufer;
 	TextBufer.setCharacterSize(CharacterSize);
 	TextBufer.setFillColor(TextColor);
 	TextBufer.setStyle(TextStyle);
 	TextBufer.setFont(*TextFont);
-	//Вектор слов после разбития строки по символам пробела.
+	//Р’РµРєС‚РѕСЂ СЃР»РѕРІ РїРѕСЃР»Рµ СЂР°Р·Р±РёС‚РёСЏ СЃС‚СЂРѕРєРё РїРѕ СЃРёРјРІРѕР»Р°Рј РїСЂРѕР±РµР»Р°.
 	std::vector<std::wstring> StrBufer = DUBLIB::Split(Str, L' ');
-	//После каждого слова добавить пробел для удобства.
+	//РџРѕСЃР»Рµ РєР°Р¶РґРѕРіРѕ СЃР»РѕРІР° РґРѕР±Р°РІРёС‚СЊ РїСЂРѕР±РµР» РґР»СЏ СѓРґРѕР±СЃС‚РІР°.
 	for (unsigned int i = 0; i < StrBufer.size(); i++) StrBufer[i] += L" ";
-	//Буфер для прошлой строчки.
+	//Р‘СѓС„РµСЂ РґР»СЏ РїСЂРѕС€Р»РѕР№ СЃС‚СЂРѕС‡РєРё.
 	std::wstring BuferStrOne = StrBufer[0];
-	//Буфер для текущей строчки.
+	//Р‘СѓС„РµСЂ РґР»СЏ С‚РµРєСѓС‰РµР№ СЃС‚СЂРѕС‡РєРё.
 	std::wstring BuferStrTwo = L"";
-	//Буфер текста для помещения в вектор строчек.
+	//Р‘СѓС„РµСЂ С‚РµРєСЃС‚Р° РґР»СЏ РїРѕРјРµС‰РµРЅРёСЏ РІ РІРµРєС‚РѕСЂ СЃС‚СЂРѕС‡РµРє.
 	sf::Text TextResultString;
-	//Пока размер строчки не будет выходить за пределы блока, добавлять по слову в буфер.
+	//РџРѕРєР° СЂР°Р·РјРµСЂ СЃС‚СЂРѕС‡РєРё РЅРµ Р±СѓРґРµС‚ РІС‹С…РѕРґРёС‚СЊ Р·Р° РїСЂРµРґРµР»С‹ Р±Р»РѕРєР°, РґРѕР±Р°РІР»СЏС‚СЊ РїРѕ СЃР»РѕРІСѓ РІ Р±СѓС„РµСЂ.
 	for (unsigned int i = 0; i < StrBufer.size(); i++) {
-		//Ко второму буферу строки добавить слово и пробел.
+		//РљРѕ РІС‚РѕСЂРѕРјСѓ Р±СѓС„РµСЂСѓ СЃС‚СЂРѕРєРё РґРѕР±Р°РІРёС‚СЊ СЃР»РѕРІРѕ Рё РїСЂРѕР±РµР».
 		BuferStrTwo += StrBufer[i];
-		//Задать текущий буфер строки для расчёта размеров надписи.
+		//Р—Р°РґР°С‚СЊ С‚РµРєСѓС‰РёР№ Р±СѓС„РµСЂ СЃС‚СЂРѕРєРё РґР»СЏ СЂР°СЃС‡С‘С‚Р° СЂР°Р·РјРµСЂРѕРІ РЅР°РґРїРёСЃРё.
 		TextBufer.setString(sf::String::fromUtf8(BuferStrTwo.begin(), BuferStrTwo.end()));
-		//Если надпись шире блока, то прежний буфер добавить в вектор для отрисовки, иначе добавить обновить старый буфер.
+		//Р•СЃР»Рё РЅР°РґРїРёСЃСЊ С€РёСЂРµ Р±Р»РѕРєР°, С‚Рѕ РїСЂРµР¶РЅРёР№ Р±СѓС„РµСЂ РґРѕР±Р°РІРёС‚СЊ РІ РІРµРєС‚РѕСЂ РґР»СЏ РѕС‚СЂРёСЃРѕРІРєРё, РёРЅР°С‡Рµ РґРѕР±Р°РІРёС‚СЊ РѕР±РЅРѕРІРёС‚СЊ СЃС‚Р°СЂС‹Р№ Р±СѓС„РµСЂ.
 		if (TextBufer.getLocalBounds().width > (float)BlockSize.x * UsedSpace) {
-			//Убрать пробел на конце.
+			//РЈР±СЂР°С‚СЊ РїСЂРѕР±РµР» РЅР° РєРѕРЅС†Рµ.
 			BuferStrOne = DUBLIB::DeleteLastCharacters(BuferStrOne, 1);
-			//Буферному спрайту строчки поставить текст без пробела на конце.
+			//Р‘СѓС„РµСЂРЅРѕРјСѓ СЃРїСЂР°Р№С‚Сѓ СЃС‚СЂРѕС‡РєРё РїРѕСЃС‚Р°РІРёС‚СЊ С‚РµРєСЃС‚ Р±РµР· РїСЂРѕР±РµР»Р° РЅР° РєРѕРЅС†Рµ.
 			TextResultString.setString(sf::String::fromUtf8(BuferStrOne.begin(), BuferStrOne.end()));
 			Label.push_back(TextResultString);
 			BuferStrOne = StrBufer[i];
 			BuferStrTwo = L"";
-			//Компенсация сдвига при добавлении в вектор окончательной строчки.
+			//РљРѕРјРїРµРЅСЃР°С†РёСЏ СЃРґРІРёРіР° РїСЂРё РґРѕР±Р°РІР»РµРЅРёРё РІ РІРµРєС‚РѕСЂ РѕРєРѕРЅС‡Р°С‚РµР»СЊРЅРѕР№ СЃС‚СЂРѕС‡РєРё.
 			i--;
 		}
 		else BuferStrOne = BuferStrTwo;
 	}
-	//Записать последнюю строчку.
+	//Р—Р°РїРёСЃР°С‚СЊ РїРѕСЃР»РµРґРЅСЋСЋ СЃС‚СЂРѕС‡РєСѓ.
 	TextResultString.setString(sf::String::fromUtf8(BuferStrOne.begin(), BuferStrOne.end()));
 	Label.push_back(TextResultString);
 
@@ -107,37 +100,47 @@ void CenteredLabel::Initialize(sf::RenderWindow* MainWindow, std::wstring Str, s
 	Centering();
 }
 
-//Передача указателя на шрифт.
+//РџРµСЂРµРґР°С‡Р° СѓРєР°Р·Р°С‚РµР»СЏ РЅР° С€СЂРёС„С‚.
 void CenteredLabel::SetFont(sf::Font* TextFont) {
 	this->TextFont = TextFont;
 }
 
-//Задаёт долю ширины блока, в которую нужно вписать текст (отступ от левого и правого края). По умолчанию 1.
+//Р—Р°РґР°С‘С‚ РґРѕР»СЋ С€РёСЂРёРЅС‹ Р±Р»РѕРєР°, РІ РєРѕС‚РѕСЂСѓСЋ РЅСѓР¶РЅРѕ РІРїРёСЃР°С‚СЊ С‚РµРєСЃС‚ (РѕС‚СЃС‚СѓРї РѕС‚ Р»РµРІРѕРіРѕ Рё РїСЂР°РІРѕРіРѕ РєСЂР°СЏ). РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ 1.
 void CenteredLabel::SetUsedSpace(float UsedSpace) {
 	this->UsedSpace = UsedSpace;
 }
 
-//Установка цвета надписи. По умолчанию белый.
+//РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РєРѕРѕСЂРґРёРЅР°С‚С‹ Р±Р»РѕРєР°.
+void CenteredLabel::SetPosition(sf::Vector2f Postion) {
+	this->Position = Position;
+}
+
+//РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РєРѕРѕСЂРґРёРЅР°С‚С‹ Р±Р»РѕРєР°.
+void CenteredLabel::SetPosition(float PostionX, float PostionY) {
+	this->Position = sf::Vector2f(PostionX, PostionY);
+}
+
+//РЈСЃС‚Р°РЅРѕРІРєР° С†РІРµС‚Р° РЅР°РґРїРёСЃРё. РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ Р±РµР»С‹Р№.
 void CenteredLabel::SetColor(sf::Color TextColor) {
 	this->TextColor = TextColor;
 }
 
-//Установка дополнительного стиля для текста.
+//РЈСЃС‚Р°РЅРѕРІРєР° РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРіРѕ СЃС‚РёР»СЏ РґР»СЏ С‚РµРєСЃС‚Р°.
 void CenteredLabel::SetStyle(sf::Text::Style TextStyle) {
 	this->TextStyle = TextStyle;
 }
 
-//Устанавливает межстрочный интервал в долях размера символа. По умолчанию 0.05 для компенсации артефактов шрифта.
+//РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РјРµР¶СЃС‚СЂРѕС‡РЅС‹Р№ РёРЅС‚РµСЂРІР°Р» РІ РґРѕР»СЏС… СЂР°Р·РјРµСЂР° СЃРёРјРІРѕР»Р°. РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ 0.05 РґР»СЏ РєРѕРјРїРµРЅСЃР°С†РёРё Р°СЂС‚РµС„Р°РєС‚РѕРІ С€СЂРёС„С‚Р°.
 void CenteredLabel::SetLineSpacing(float LineSpacing) {
 	this->LineSpacing = LineSpacing;
 }
 
-//Установка размера символов. По умолчанию равно 12.
+//РЈСЃС‚Р°РЅРѕРІРєР° СЂР°Р·РјРµСЂР° СЃРёРјРІРѕР»РѕРІ. РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЂР°РІРЅРѕ 12.
 void CenteredLabel::SetCharacterSize(unsigned int Size) {
 	this->CharacterSize = Size;
 }
 
-//Отрисовка центрированной надписи.
+//РћС‚СЂРёСЃРѕРІРєР° С†РµРЅС‚СЂРёСЂРѕРІР°РЅРЅРѕР№ РЅР°РґРїРёСЃРё.
 void CenteredLabel::Update() {
 	for (unsigned int i = 0; i < Label.size(); i++) MainWindow->draw(Label[i]); 
 
@@ -146,7 +149,7 @@ void CenteredLabel::Update() {
 // --->CenteredLabel
 //=======================================================================================================================//
 
-//Применение стилей и настроек к надписи.
+//РџСЂРёРјРµРЅРµРЅРёРµ СЃС‚РёР»РµР№ Рё РЅР°СЃС‚СЂРѕРµРє Рє РЅР°РґРїРёСЃРё.
 void TextBox::AppendStyle() {
 	Label.setFont(*TextFont);
 	Label.setCharacterSize(CharacterSize);
@@ -159,64 +162,64 @@ void TextBox::AppendStyle() {
 
 }
 
-//Разбитие строки на подстроки методом подстановки символов разрыва строки Windows.
+//Р Р°Р·Р±РёС‚РёРµ СЃС‚СЂРѕРєРё РЅР° РїРѕРґСЃС‚СЂРѕРєРё РјРµС‚РѕРґРѕРј РїРѕРґСЃС‚Р°РЅРѕРІРєРё СЃРёРјРІРѕР»РѕРІ СЂР°Р·СЂС‹РІР° СЃС‚СЂРѕРєРё Windows.
 std::wstring TextBox::LineBreak(sf::Text TextBufer, sf::Font* TextFont, std::wstring Str, unsigned int BlockSizeX) {
-	//Коррекция потери указателя на шрифт при копировании.
+	//РљРѕСЂСЂРµРєС†РёСЏ РїРѕС‚РµСЂРё СѓРєР°Р·Р°С‚РµР»СЏ РЅР° С€СЂРёС„С‚ РїСЂРё РєРѕРїРёСЂРѕРІР°РЅРёРё.
 	TextBufer.setFont(*TextFont);
-	//Результат выполнения.
+	//Р РµР·СѓР»СЊС‚Р°С‚ РІС‹РїРѕР»РЅРµРЅРёСЏ.
 	std::wstring Result = L"";
 
-	//Проверка необходимости переноса.
+	//РџСЂРѕРІРµСЂРєР° РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё РїРµСЂРµРЅРѕСЃР°.
 	TextBufer.setString(sf::String::fromUtf8(Str.begin(), Str.end()));
 	if (TextBufer.getLocalBounds().width >= BlockSizeX) {
-		//Строка разбивается по пробелам.
+		//РЎС‚СЂРѕРєР° СЂР°Р·Р±РёРІР°РµС‚СЃСЏ РїРѕ РїСЂРѕР±РµР»Р°Рј.
 		std::vector<std::wstring> StringsBufer = DUBLIB::Split(Str, L' ');
-		//Первый буфер: хранит значение из предыдущего цикла, после которого в случае превышения ширины блока переносится текст.
+		//РџРµСЂРІС‹Р№ Р±СѓС„РµСЂ: С…СЂР°РЅРёС‚ Р·РЅР°С‡РµРЅРёРµ РёР· РїСЂРµРґС‹РґСѓС‰РµРіРѕ С†РёРєР»Р°, РїРѕСЃР»Рµ РєРѕС‚РѕСЂРѕРіРѕ РІ СЃР»СѓС‡Р°Рµ РїСЂРµРІС‹С€РµРЅРёСЏ С€РёСЂРёРЅС‹ Р±Р»РѕРєР° РїРµСЂРµРЅРѕСЃРёС‚СЃСЏ С‚РµРєСЃС‚.
 		std::wstring StrBuferOne = L"";
-		//Второй буфер: к нему добавляются слова, а также на его основе строится размерная модель.
+		//Р’С‚РѕСЂРѕР№ Р±СѓС„РµСЂ: Рє РЅРµРјСѓ РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ СЃР»РѕРІР°, Р° С‚Р°РєР¶Рµ РЅР° РµРіРѕ РѕСЃРЅРѕРІРµ СЃС‚СЂРѕРёС‚СЃСЏ СЂР°Р·РјРµСЂРЅР°СЏ РјРѕРґРµР»СЊ.
 		std::wstring StrBuferTwo = L"";
 
-		//Добавление пробела в конец всех строк.
+		//Р”РѕР±Р°РІР»РµРЅРёРµ РїСЂРѕР±РµР»Р° РІ РєРѕРЅРµС† РІСЃРµС… СЃС‚СЂРѕРє.
 		for (unsigned int i = 0; i < StringsBufer.size(); i++) StringsBufer[i] += L" ";
 
-		//Проверка выхода за пределы области.
+		//РџСЂРѕРІРµСЂРєР° РІС‹С…РѕРґР° Р·Р° РїСЂРµРґРµР»С‹ РѕР±Р»Р°СЃС‚Рё.
 		for (unsigned int i = 0; i < StringsBufer.size(); i++) {
-			//Добавление слова во второй буфер, участвующий в проверке на превышение ширины блока.
+			//Р”РѕР±Р°РІР»РµРЅРёРµ СЃР»РѕРІР° РІРѕ РІС‚РѕСЂРѕР№ Р±СѓС„РµСЂ, СѓС‡Р°СЃС‚РІСѓСЋС‰РёР№ РІ РїСЂРѕРІРµСЂРєРµ РЅР° РїСЂРµРІС‹С€РµРЅРёРµ С€РёСЂРёРЅС‹ Р±Р»РѕРєР°.
 			StrBuferTwo += StringsBufer[i];
 			TextBufer.setString(sf::String::fromUtf8(StrBuferTwo.begin(), StrBuferTwo.end()));
-			///Если длина строки больше ширины блока.
+			///Р•СЃР»Рё РґР»РёРЅР° СЃС‚СЂРѕРєРё Р±РѕР»СЊС€Рµ С€РёСЂРёРЅС‹ Р±Р»РѕРєР°.
 			if (TextBufer.getLocalBounds().width > BlockSizeX) {
-				//Сохранение результата и добавление символа разрыва строки Windows.
+				//РЎРѕС…СЂР°РЅРµРЅРёРµ СЂРµР·СѓР»СЊС‚Р°С‚Р° Рё РґРѕР±Р°РІР»РµРЅРёРµ СЃРёРјРІРѕР»Р° СЂР°Р·СЂС‹РІР° СЃС‚СЂРѕРєРё Windows.
 				Result += StrBuferOne;
 				Result = DUBLIB::Trim(Result);
 				Result += L"\n";
-				//Очистка буферов.
+				//РћС‡РёСЃС‚РєР° Р±СѓС„РµСЂРѕРІ.
 				StrBuferOne.clear();
 				StrBuferTwo = StringsBufer[i];
 			}
 			else StrBuferOne = StrBuferTwo;
 		}
-		//Если во втором буфере что-то осталось, то добавить в строку.
+		//Р•СЃР»Рё РІРѕ РІС‚РѕСЂРѕРј Р±СѓС„РµСЂРµ С‡С‚Рѕ-С‚Рѕ РѕСЃС‚Р°Р»РѕСЃСЊ, С‚Рѕ РґРѕР±Р°РІРёС‚СЊ РІ СЃС‚СЂРѕРєСѓ.
 		Result += StrBuferTwo;
 	}
 	else Result = Str;
 	return Result;
 }
 
-//Конструктор: пустой.
+//РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ: РїСѓСЃС‚РѕР№.
 TextBox::TextBox() {
 
 }
 
-//Задаёт окно отрисовки и размеры блока отображения. Вызывать после установки всех стилей.
+//Р—Р°РґР°С‘С‚ РѕРєРЅРѕ РѕС‚СЂРёСЃРѕРІРєРё Рё СЂР°Р·РјРµСЂС‹ Р±Р»РѕРєР° РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ. Р’С‹Р·С‹РІР°С‚СЊ РїРѕСЃР»Рµ СѓСЃС‚Р°РЅРѕРІРєРё РІСЃРµС… СЃС‚РёР»РµР№.
 void TextBox::Initialize(sf::RenderWindow* MainWindow, sf::Vector2u BlockSize) {
 
-	//---> Передача аргументов.
+	//---> РџРµСЂРµРґР°С‡Р° Р°СЂРіСѓРјРµРЅС‚РѕРІ.
 	//=======================================================================================================================//
 	this->MainWindow = MainWindow;
 	this->BlockSize = BlockSize;
 
-	//---> Генерация надписей.
+	//---> Р“РµРЅРµСЂР°С†РёСЏ РЅР°РґРїРёСЃРµР№.
 	//=======================================================================================================================//
 	AppendStyle();
 	std::wstring ResultString = L"";
@@ -224,53 +227,53 @@ void TextBox::Initialize(sf::RenderWindow* MainWindow, sf::Vector2u BlockSize) {
 	Label.setString(sf::String::fromUtf8(ResultString.begin(), ResultString.end()));
 }
 
-//Устанавливает позицию в окне.
+//РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РїРѕР·РёС†РёСЋ РІ РѕРєРЅРµ.
 void TextBox::SetPosition(sf::Vector2f Position) {
 	this->Position = Position;
 }
 
-//Устанавливает позицию в окне.
+//РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РїРѕР·РёС†РёСЋ РІ РѕРєРЅРµ.
 void TextBox::SetPosition(float PositionX, float PositionY) {
 	this->Position = sf::Vector2f(PositionX, PositionY);
 }
 
-//Передача указателя на шрифт.
+//РџРµСЂРµРґР°С‡Р° СѓРєР°Р·Р°С‚РµР»СЏ РЅР° С€СЂРёС„С‚.
 void TextBox::SetFont(sf::Font* TextFont) {
 	this->TextFont = TextFont;
 }
 
-//Задаёт межстрочный промежуток в долях от установленного шрифтом. По умолчанию 1.
+//Р—Р°РґР°С‘С‚ РјРµР¶СЃС‚СЂРѕС‡РЅС‹Р№ РїСЂРѕРјРµР¶СѓС‚РѕРє РІ РґРѕР»СЏС… РѕС‚ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕРіРѕ С€СЂРёС„С‚РѕРј. РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ 1.
 void TextBox::SetLineSpacing(float LineSpacing) {
 	this->LineSpacing = LineSpacing;
 }
 
-//Установка цвета надписи. По умолчанию белый.
+//РЈСЃС‚Р°РЅРѕРІРєР° С†РІРµС‚Р° РЅР°РґРїРёСЃРё. РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ Р±РµР»С‹Р№.
 void TextBox::SetColor(sf::Color TextColor) {
 	this->TextColor = TextColor;
 }
 
-//Установка дополнительного стиля для текста.
+//РЈСЃС‚Р°РЅРѕРІРєР° РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕРіРѕ СЃС‚РёР»СЏ РґР»СЏ С‚РµРєСЃС‚Р°.
 void TextBox::SetStyle(sf::Text::Style TextStyle) {
 	this->TextStyle = TextStyle;
 }
 
-//Установка текста и толщины обводки.
+//РЈСЃС‚Р°РЅРѕРІРєР° С‚РµРєСЃС‚Р° Рё С‚РѕР»С‰РёРЅС‹ РѕР±РІРѕРґРєРё.
 void TextBox::SetOutline(sf::Color OutlineColor, float Thickness) {
 	this->OutlineColor = OutlineColor;
 	this->Thickness = Thickness;
 }
 
-//Установка размера символов. По умолчанию равно 12.
+//РЈСЃС‚Р°РЅРѕРІРєР° СЂР°Р·РјРµСЂР° СЃРёРјРІРѕР»РѕРІ. РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ СЂР°РІРЅРѕ 12.
 void TextBox::SetCharacterSize(unsigned int Size) {
 	this->CharacterSize = Size;
 }
 
-//Установка текста.
+//РЈСЃС‚Р°РЅРѕРІРєР° С‚РµРєСЃС‚Р°.
 void TextBox::SetStringsArray(std::vector<std::wstring> StringsArray) {
 	this->StringsArray = StringsArray;
 }
 
-//Отрисовка текстового поля.
+//РћС‚СЂРёСЃРѕРІРєР° С‚РµРєСЃС‚РѕРІРѕРіРѕ РїРѕР»СЏ.
 void TextBox::Update() {
 	MainWindow->draw(Label);
 }
@@ -278,13 +281,13 @@ void TextBox::Update() {
 //---> Intro
 //=======================================================================================================================//
 
-//Установка анимации проявления.
+//РЈСЃС‚Р°РЅРѕРІРєР° Р°РЅРёРјР°С†РёРё РїСЂРѕСЏРІР»РµРЅРёСЏ.
 void Intro::InitializeAppearancesAnimation() {
 	TransparencyCoefficient = 255;
 	StartAppearancesAnimation = true;
 }
 
-//Воспроизведение анимации проявления.
+//Р’РѕСЃРїСЂРѕРёР·РІРµРґРµРЅРёРµ Р°РЅРёРјР°С†РёРё РїСЂРѕСЏРІР»РµРЅРёСЏ.
 void Intro::PlayAppearancesAnimation() {
 	TransparencyCoefficient -= 0.2 * *GlobalTimeAsMicroseconds / 800;
 	if (TransparencyCoefficient < 0) {
@@ -295,13 +298,13 @@ void Intro::PlayAppearancesAnimation() {
 	MainWindow->draw(BlackRect);
 }
 
-//Установка анимации затухания.
+//РЈСЃС‚Р°РЅРѕРІРєР° Р°РЅРёРјР°С†РёРё Р·Р°С‚СѓС…Р°РЅРёСЏ.
 void Intro::InitializeAttenuationAnimation() {
 	TransparencyCoefficient = 0;
 	StartAttenuationAnimation = true;
 }
 
-//Воспроизведение анимации затухания.
+//Р’РѕСЃРїСЂРѕРёР·РІРµРґРµРЅРёРµ Р°РЅРёРјР°С†РёРё Р·Р°С‚СѓС…Р°РЅРёСЏ.
 void Intro::PlayAttenuationAnimation() {
 	TransparencyCoefficient += 0.2 * *GlobalTimeAsMicroseconds / 800;
 	if (TransparencyCoefficient > 255) {
@@ -312,27 +315,30 @@ void Intro::PlayAttenuationAnimation() {
 	MainWindow->draw(BlackRect);
 }
 
-//Конструктор: запускает проигрывание вступительного ролика.
+//РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ: Р·Р°РїСѓСЃРєР°РµС‚ РїСЂРѕРёРіСЂС‹РІР°РЅРёРµ РІСЃС‚СѓРїРёС‚РµР»СЊРЅРѕРіРѕ СЂРѕР»РёРєР°.
 Intro::Intro(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds, unsigned long long int* GlobalTimeAsMicroseconds) {
 
-	//---> Передача аргументов.
+	//---> РџРµСЂРµРґР°С‡Р° Р°СЂРіСѓРјРµРЅС‚РѕРІ.
 	//=======================================================================================================================//
 	this->MainWindow = MainWindow;
 	this->GlobalTimeAsSeconds = GlobalTimeAsSeconds;
 	this->GlobalTimeAsMicroseconds = GlobalTimeAsMicroseconds;
 
-	//---> Загрузка историй из текстового файла и шрифта.
+	//---> Р—Р°РіСЂСѓР·РєР° РёСЃС‚РѕСЂРёР№ РёР· С‚РµРєСЃС‚РѕРІРѕРіРѕ С„Р°Р№Р»Р° Рё С€СЂРёС„С‚Р°.
 	//=======================================================================================================================//
-	Book = DUBLIB::GetMarkeredStringsArrayFromFile(L"Data\\Local\\" + DUBLIB::GetMarkeredStringFromFile(L"Settings.txt", L"game-local") + L".txt", L"intro");
+	//Р’С‹Р±СЂР°РЅРЅС‹Р№ СЏР·С‹Рє.
+	std::wstring *Local = new std::wstring;
+	*Local = DUBLIB::GetMarkeredStringFromFile(L"Settings.txt", L"game-local");
+	Book = DUBLIB::GetMarkeredStringsArrayFromFile(L"Data\\Local\\" + *Local + L".txt", L"intro");
 	TextFont.loadFromFile("Data\\Fonts\\" + DUBLIB::GetMarkeredStringFromFile("Settings.txt", "game-font"));
 
-	//---> Загрузка иллюстраций и установка их положения по центру экрана. 
+	//---> Р—Р°РіСЂСѓР·РєР° РёР»Р»СЋСЃС‚СЂР°С†РёР№ Рё СѓСЃС‚Р°РЅРѕРІРєР° РёС… РїРѕР»РѕР¶РµРЅРёСЏ РїРѕ С†РµРЅС‚СЂСѓ СЌРєСЂР°РЅР°. 
 	//=======================================================================================================================//
-	//Буферы.
+	//Р‘СѓС„РµСЂС‹.
 	sf::Texture BufferTexture;
 	sf::Sprite BufferSprite;
 	std::string Path;
-	//Обработка загрузки и позиционирования.
+	//РћР±СЂР°Р±РѕС‚РєР° Р·Р°РіСЂСѓР·РєРё Рё РїРѕР·РёС†РёРѕРЅРёСЂРѕРІР°РЅРёСЏ.
 	for (unsigned int i = 0; i < 9; i++) {
 		Path = "Data\\Texturepacks\\" + DUBLIB::GetMarkeredStringFromFile("Settings.txt", "game-texturepack") + "\\Story\\Story" + DUBLIB::ConvertNumberToString(i + 1) + ".png";
 
@@ -345,12 +351,12 @@ Intro::Intro(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds, unsigned
 		StorySprites[i].setOrigin(StorySprites[i].getLocalBounds().width / 2, StorySprites[i].getLocalBounds().height / 2);
 		StorySprites[i].setPosition((float)MainWindow->getSize().x / 2, (float)MainWindow->getSize().y / 2);
 	}
-	//Формирование чёрного прямоугольника для анимации.
+	//Р¤РѕСЂРјРёСЂРѕРІР°РЅРёРµ С‡С‘СЂРЅРѕРіРѕ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєР° РґР»СЏ Р°РЅРёРјР°С†РёРё.
 	BlackRect.setSize(sf::Vector2f(MainWindow->getSize().x, MainWindow->getSize().y));
 
-	//---> Генерация лейблов.
+	//---> Р“РµРЅРµСЂР°С†РёСЏ Р»РµР№Р±Р»РѕРІ.
 	//=======================================================================================================================//
-	//Заполнение вектора шаблонами.
+	//Р—Р°РїРѕР»РЅРµРЅРёРµ РІРµРєС‚РѕСЂР° С€Р°Р±Р»РѕРЅР°РјРё.
 	CenteredLabel* CL_Bufer = new CenteredLabel;
 	for (unsigned int i = 0; i < 9; i++) {
 		StoryText.push_back(*CL_Bufer);
@@ -362,13 +368,22 @@ Intro::Intro(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds, unsigned
 		StoryText[i].Initialize(MainWindow, Book[i], MainWindow->getSize());
 	}
 	delete CL_Bufer;
+
+	PressAnyKey.SetCharacterSize(18);
+	PressAnyKey.SetFont(&TextFont);
+	PressAnyKey.SetStyle(sf::Text::Style::Italic);
+	PressAnyKey.SetPosition(0, MainWindow->getSize().y * 0.95);
+	PressAnyKey.Initialize(MainWindow, DUBLIB::GetMarkeredStringFromFile(L"Data\\Local\\" + *Local + L".txt", L"press-anykey"), sf::Vector2u(MainWindow->getSize().x, 20));
+	delete Local;
+
+	KP_Space.SetKey(sf::Keyboard::Space);
 }
 
-//Запускает вступительный ролик. Возвращает false, если не удалось или возникли ошибки.
+//Р—Р°РїСѓСЃРєР°РµС‚ РІСЃС‚СѓРїРёС‚РµР»СЊРЅС‹Р№ СЂРѕР»РёРє. Р’РѕР·РІСЂР°С‰Р°РµС‚ false, РµСЃР»Рё РЅРµ СѓРґР°Р»РѕСЃСЊ РёР»Рё РІРѕР·РЅРёРєР»Рё РѕС€РёР±РєРё.
 bool Intro::Start() {
-	//Результат выполнения функции.
+	//Р РµР·СѓР»СЊС‚Р°С‚ РІС‹РїРѕР»РЅРµРЅРёСЏ С„СѓРЅРєС†РёРё.
 	bool IsSuccessfully = true;
-	//Загрузка и воспроизведение трека.
+	//Р—Р°РіСЂСѓР·РєР° Рё РІРѕСЃРїСЂРѕРёР·РІРµРґРµРЅРёРµ С‚СЂРµРєР°.
 	if (!IntroMusic.openFromFile("Data\\Sounds\\Intro.ogg")) IsSuccessfully = false;
 	IntroMusic.play();
 
@@ -377,7 +392,7 @@ bool Intro::Start() {
 	return IsSuccessfully;
 }
 
-//Останавливает вступительный ролик.
+//РћСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РІСЃС‚СѓРїРёС‚РµР»СЊРЅС‹Р№ СЂРѕР»РёРє.
 void Intro::End() {
 	IntroMusic.stop();
 	ElapsedTime = 0;
@@ -388,62 +403,69 @@ void Intro::End() {
 	StartAppearancesAnimation = true;
 	StartAttenuationAnimation = false;
 	IsAttenuationAnimationWasPlayed = false;
+	SpaceWasPresed = 0;
 }
 
-//Выполнение цикла обновления класса.
+//Р’С‹РїРѕР»РЅРµРЅРёРµ С†РёРєР»Р° РѕР±РЅРѕРІР»РµРЅРёСЏ РєР»Р°СЃСЃР°.
 void Intro::Update() {
-	//Пока включен ролик.
+	//РџРѕРєР° РІРєР»СЋС‡РµРЅ СЂРѕР»РёРє.
 	if (IsEnabled) {
-		//Если первый цикл, то проставить спрайтам указатели на текстуры.
+		//Р•СЃР»Рё РїРµСЂРІС‹Р№ С†РёРєР», С‚Рѕ РїСЂРѕСЃС‚Р°РІРёС‚СЊ СЃРїСЂР°Р№С‚Р°Рј СѓРєР°Р·Р°С‚РµР»Рё РЅР° С‚РµРєСЃС‚СѓСЂС‹.
 		if (ElapsedTime == 0) StorySprites[IllustrationIndex].setTexture(StoryTextures[IllustrationIndex]);
-		//Добавление времени кадра.
+		//Р”РѕР±Р°РІР»РµРЅРёРµ РІСЂРµРјРµРЅРё РєР°РґСЂР°.
 		ElapsedTime += *GlobalTimeAsSeconds;
-		//Общий индекс кадров пролога.
+		//РћР±С‰РёР№ РёРЅРґРµРєСЃ РєР°РґСЂРѕРІ РїСЂРѕР»РѕРіР°.
 		unsigned int FrameIndex = IllustrationIndex + BookIndex;
 
-		//Если пролог не закончился и прошло нужное время в секундах, то сменить кадр.
+		//Р•СЃР»Рё РїСЂРѕР»РѕРі РЅРµ Р·Р°РєРѕРЅС‡РёР»СЃСЏ Рё РїСЂРѕС€Р»Рѕ РЅСѓР¶РЅРѕРµ РІСЂРµРјСЏ РІ СЃРµРєСѓРЅРґР°С…, С‚Рѕ СЃРјРµРЅРёС‚СЊ РєР°РґСЂ.
 		if (FrameIndex < 17 && ElapsedTime > EveryFrameTime[TimeIndex]) {
 			ElapsedTime -= EveryFrameTime[TimeIndex];
 			TimeIndex++;
 			IsAttenuationAnimationWasPlayed = false; StartAttenuationAnimation = false;
 			InitializeAppearancesAnimation();
-			//Если чётное, перелистнуть иллюстрацию, иначе перелистнуть часть пролога.
+			//Р•СЃР»Рё С‡С‘С‚РЅРѕРµ, РїРµСЂРµР»РёСЃС‚РЅСѓС‚СЊ РёР»Р»СЋСЃС‚СЂР°С†РёСЋ, РёРЅР°С‡Рµ РїРµСЂРµР»РёСЃС‚РЅСѓС‚СЊ С‡Р°СЃС‚СЊ РїСЂРѕР»РѕРіР°.
 			if (FrameIndex % 2 == 0) BookIndex++; else {
-				//Перелистнуть кадр.
+				//РџРµСЂРµР»РёСЃС‚РЅСѓС‚СЊ РєР°РґСЂ.
 				IllustrationIndex++;
-				//Нужно для обновления ссылки на текстуру.
+				//РќСѓР¶РЅРѕ РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ СЃСЃС‹Р»РєРё РЅР° С‚РµРєСЃС‚СѓСЂСѓ.
 				StorySprites[IllustrationIndex].setTexture(StoryTextures[IllustrationIndex]);
 			}
 		}
 
-		//Если последний кадр был отрисован, то завершить вступительный ролик, иначе отрисовывать.
+		//Р•СЃР»Рё РїРѕСЃР»РµРґРЅРёР№ РєР°РґСЂ Р±С‹Р» РѕС‚СЂРёСЃРѕРІР°РЅ, С‚Рѕ Р·Р°РІРµСЂС€РёС‚СЊ РІСЃС‚СѓРїРёС‚РµР»СЊРЅС‹Р№ СЂРѕР»РёРє, РёРЅР°С‡Рµ РѕС‚СЂРёСЃРѕРІС‹РІР°С‚СЊ.
 		if (FrameIndex % 2 == 0 && BookIndex < 9) StoryText[BookIndex].Update();
 		if (FrameIndex % 2 != 0 && IllustrationIndex < 9) MainWindow->draw(StorySprites[IllustrationIndex]);
 
-		//Если до конца кадра осталось меньше 0.5 секунды, то начать анимацию затухания.
+		//Р•СЃР»Рё РґРѕ РєРѕРЅС†Р° РєР°РґСЂР° РѕСЃС‚Р°Р»РѕСЃСЊ РјРµРЅСЊС€Рµ 0.5 СЃРµРєСѓРЅРґС‹, С‚Рѕ РЅР°С‡Р°С‚СЊ Р°РЅРёРјР°С†РёСЋ Р·Р°С‚СѓС…Р°РЅРёСЏ.
 		if (EveryFrameTime[TimeIndex] - ElapsedTime < 1.00 && !StartAttenuationAnimation && !IsAttenuationAnimationWasPlayed && FrameIndex < 17) {
 			IsAttenuationAnimationWasPlayed = true;
 			InitializeAttenuationAnimation();
 		}
 
-		//Проигрывание анимаций.
+		//РџСЂРѕРёРіСЂС‹РІР°РЅРёРµ Р°РЅРёРјР°С†РёР№.
 		if (StartAppearancesAnimation) PlayAppearancesAnimation();
 		if (StartAttenuationAnimation) PlayAttenuationAnimation();
+
+		//РћР±СЂР°Р±РѕС‚РєР° РїСЂРµСЂС‹РІР°РЅРёСЏ СЂРѕР»РёРєР° РїРѕ С‚СЂРµР±РѕРІР°РЅРёСЋ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
+		if (KP_Space.Update()) SpaceWasPresed++;
+		if (SpaceWasPresed == 1) PressAnyKey.Update();
+		if (SpaceWasPresed == 2) End();
+
 	}
 }
 
 //---> Credits
 //=======================================================================================================================//
 
-//Конструктор: задаёт окно отрисовки технических данных.
+//РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ: Р·Р°РґР°С‘С‚ РѕРєРЅРѕ РѕС‚СЂРёСЃРѕРІРєРё С‚РµС…РЅРёС‡РµСЃРєРёС… РґР°РЅРЅС‹С….
 Credits::Credits(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds) {
 
-	//---> Передача аргументов.
+	//---> РџРµСЂРµРґР°С‡Р° Р°СЂРіСѓРјРµРЅС‚РѕРІ.
 	//=======================================================================================================================//
 	this->MainWindow = MainWindow;
 	this->GlobalTimeAsSeconds = GlobalTimeAsSeconds;
 
-	//---> Загрузка титров и настройка текстовой области.
+	//---> Р—Р°РіСЂСѓР·РєР° С‚РёС‚СЂРѕРІ Рё РЅР°СЃС‚СЂРѕР№РєР° С‚РµРєСЃС‚РѕРІРѕР№ РѕР±Р»Р°СЃС‚Рё.
 	//=======================================================================================================================//
 	TextFont.loadFromFile("Data\\Fonts\\" + DUBLIB::GetMarkeredStringFromFile("Settings.txt", "game-font"));
 	TextBoxObject.SetCharacterSize(18);
@@ -453,7 +475,7 @@ Credits::Credits(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds) {
 	TextBoxObject.SetStringsArray(DUBLIB::GetMarkeredStringsArrayFromFile(L"Data\\Local\\" + DUBLIB::GetMarkeredStringFromFile(L"Settings.txt", L"game-local") + L".txt", L"credits"));
 	TextBoxObject.Initialize(MainWindow, sf::Vector2u(MainWindow->getSize().x - 56, MainWindow->getSize().y));
 
-	//---> Загрузка текстур.
+	//---> Р—Р°РіСЂСѓР·РєР° С‚РµРєСЃС‚СѓСЂ.
 	//=======================================================================================================================//
 	BorderAmountX = MainWindow->getSize().x / 48;
 	BorderAmountY = MainWindow->getSize().y / 28;
@@ -471,7 +493,7 @@ Credits::Credits(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds) {
 	
 	delete TexturepackName;
 
-	//---> Создание центрируемой надписи заголовка.
+	//---> РЎРѕР·РґР°РЅРёРµ С†РµРЅС‚СЂРёСЂСѓРµРјРѕР№ РЅР°РґРїРёСЃРё Р·Р°РіРѕР»РѕРІРєР°.
 	//=======================================================================================================================//
 	CenteredLabelObject.SetCharacterSize(48);
 	CenteredLabelObject.SetFont(&TextFont);
@@ -480,42 +502,42 @@ Credits::Credits(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds) {
 	CenteredLabelObject.Initialize(MainWindow, DUBLIB::GetMarkeredStringFromFile(L"Data\\Local\\" + DUBLIB::GetMarkeredStringFromFile(L"Settings.txt", L"game-local") + L".txt", L"credits-header"), sf::Vector2u(HeaderSprite.getTextureRect().width, HeaderSprite.getTextureRect().height));
 }
 
-//Выполнение цикла обновления класса.
+//Р’С‹РїРѕР»РЅРµРЅРёРµ С†РёРєР»Р° РѕР±РЅРѕРІР»РµРЅРёСЏ РєР»Р°СЃСЃР°.
 void Credits::Update() {
-	//Заливка цветом.
+	//Р—Р°Р»РёРІРєР° С†РІРµС‚РѕРј.
 	MainWindow->clear(sf::Color(158, 120, 119));
 
 	MainWindow->draw(EmblemSprite);
 	TextBoxObject.Update();
-	//Отрисовка заголовка.
+	//РћС‚СЂРёСЃРѕРІРєР° Р·Р°РіРѕР»РѕРІРєР°.
 	MainWindow->draw(HeaderSprite);
 	CenteredLabelObject.Update();
 
-	//Отрисовка верхней рамки. Сдвиг на 12px для симметрии.
+	//РћС‚СЂРёСЃРѕРІРєР° РІРµСЂС…РЅРµР№ СЂР°РјРєРё. РЎРґРІРёРі РЅР° 12px РґР»СЏ СЃРёРјРјРµС‚СЂРёРё.
 	BorderSprite.setTextureRect(sf::IntRect(0, 0, 48, 28));
 	for (unsigned int i = 0; i < BorderAmountX; i++) {
 		BorderSprite.setPosition(48 * i + 28 - 12, 96);
 		MainWindow->draw(BorderSprite);
 	}
-	//Отрисовка левой рамки.
+	//РћС‚СЂРёСЃРѕРІРєР° Р»РµРІРѕР№ СЂР°РјРєРё.
 	BorderSprite.setTextureRect(sf::IntRect(0, 28, 28, 48));
 	for (unsigned int i = 0; i < BorderAmountY; i++) {
 		BorderSprite.setPosition(0, 48 * i + 28 + 96);
 		MainWindow->draw(BorderSprite);
 	}
-	//Отрисовка правой рамки.
+	//РћС‚СЂРёСЃРѕРІРєР° РїСЂР°РІРѕР№ СЂР°РјРєРё.
 	BorderSprite.setTextureRect(sf::IntRect(28, 28, 28, 48));
 	for (unsigned int i = 0; i < BorderAmountY; i++) {
 		BorderSprite.setPosition(MainWindow->getSize().x - 28, 48 * i + 28 + 96);
 		MainWindow->draw(BorderSprite);
 	}
-	//Отрисовка нижней рамки. Сдвиг на 12px для симметрии.
+	//РћС‚СЂРёСЃРѕРІРєР° РЅРёР¶РЅРµР№ СЂР°РјРєРё. РЎРґРІРёРі РЅР° 12px РґР»СЏ СЃРёРјРјРµС‚СЂРёРё.
 	BorderSprite.setTextureRect(sf::IntRect(48, 0, 48, 28));
 	for (unsigned int i = 0; i < BorderAmountX; i++) {
 		BorderSprite.setPosition(48 * i + 28 - 12, MainWindow->getSize().y - 28);
 		MainWindow->draw(BorderSprite);
 	}
-	//Отрисовка уголков.
+	//РћС‚СЂРёСЃРѕРІРєР° СѓРіРѕР»РєРѕРІ.
 	BorderSprite.setTextureRect(sf::IntRect(56, 28, 28, 28));
 	BorderSprite.setPosition(0, 96);
 	MainWindow->draw(BorderSprite);
@@ -566,25 +588,25 @@ void Credits::Update() {
 
 
 
-//Конструктор: загружает игру и включает её обработку.
+//РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ: Р·Р°РіСЂСѓР¶Р°РµС‚ РёРіСЂСѓ Рё РІРєР»СЋС‡Р°РµС‚ РµС‘ РѕР±СЂР°Р±РѕС‚РєСѓ.
 Game::Game(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds) {
 
-	//---> Передача аргументов.
+	//---> РџРµСЂРµРґР°С‡Р° Р°СЂРіСѓРјРµРЅС‚РѕРІ.
 	//=======================================================================================================================//
 	this->MainWindow = MainWindow;
 	this->GlobalTimeAsSeconds = GlobalTimeAsSeconds;
 }
 
-//Конструктор: задаёт окно отрисовки технических данных и счётчик времени.
+//РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ: Р·Р°РґР°С‘С‚ РѕРєРЅРѕ РѕС‚СЂРёСЃРѕРІРєРё С‚РµС…РЅРёС‡РµСЃРєРёС… РґР°РЅРЅС‹С… Рё СЃС‡С‘С‚С‡РёРє РІСЂРµРјРµРЅРё.
 World::World(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds) {
 
-	//---> Передача аргументов.
+	//---> РџРµСЂРµРґР°С‡Р° Р°СЂРіСѓРјРµРЅС‚РѕРІ.
 	//=======================================================================================================================//
 	this->MainWindow = MainWindow;
 	this->GlobalTimeAsSeconds = GlobalTimeAsSeconds;
 }
 
-//Выполнение цикла обновления класса.
+//Р’С‹РїРѕР»РЅРµРЅРёРµ С†РёРєР»Р° РѕР±РЅРѕРІР»РµРЅРёСЏ РєР»Р°СЃСЃР°.
 void World::Update() {
 
 }

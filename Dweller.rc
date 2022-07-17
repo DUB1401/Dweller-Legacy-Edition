@@ -13,7 +13,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Русский (Россия) resources
+// Р СѓСЃСЃРєРёР№ (Р РѕСЃСЃРёСЏ) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
 LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
@@ -60,7 +60,7 @@ IDI_ICON3               ICON                    "C:\\Users\\DUB1401\\Source\\Rep
 
 IDI_ICON4               ICON                    "C:\\Users\\DUB1401\\Source\\Repos\\Dweller\\x64\\Debug\\Data\\Icons\\icon24.ico"
 
-#endif    // Русский (Россия) resources
+#endif    // Р СѓСЃСЃРєРёР№ (Р РѕСЃСЃРёСЏ) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

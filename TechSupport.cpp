@@ -1,62 +1,62 @@
 #include "TechSupport.h"
 #include "EvolvGen.h"
 
-//Конструктор: задаёт окно отрисовки технических данных и счётчик времени.
+//РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ: Р·Р°РґР°С‘С‚ РѕРєРЅРѕ РѕС‚СЂРёСЃРѕРІРєРё С‚РµС…РЅРёС‡РµСЃРєРёС… РґР°РЅРЅС‹С… Рё СЃС‡С‘С‚С‡РёРє РІСЂРµРјРµРЅРё.
 TechSupport::TechSupport(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds) {
 
-	//---> Передача аргументов.
+	//---> РџРµСЂРµРґР°С‡Р° Р°СЂРіСѓРјРµРЅС‚РѕРІ.
 	//=======================================================================================================================//
 	this->MainWindow = MainWindow;
 	this->GlobalTimeAsSeconds = GlobalTimeAsSeconds;
 
-	//---> Создание надписей для отображения технических данных.
+	//---> РЎРѕР·РґР°РЅРёРµ РЅР°РґРїРёСЃРµР№ РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ С‚РµС…РЅРёС‡РµСЃРєРёС… РґР°РЅРЅС‹С….
 	//=======================================================================================================================//
-	//Настройка шаблона генерации надписей.
+	//РќР°СЃС‚СЂРѕР№РєР° С€Р°Р±Р»РѕРЅР° РіРµРЅРµСЂР°С†РёРё РЅР°РґРїРёСЃРµР№.
 	sf::Text* TemplateLabel = new sf::Text;
 	TemplateLabel->setFillColor(sf::Color::Green);
 	TemplateLabel->setCharacterSize(12);
-	//Загрузка шрифта.
+	//Р—Р°РіСЂСѓР·РєР° С€СЂРёС„С‚Р°.
 	sf::Font* TemplateFont = new sf::Font;
 	TemplateFont->loadFromFile("Data\\Fonts\\Arialuni.ttf");
-	//Генерация надписей в цикле.
+	//Р“РµРЅРµСЂР°С†РёСЏ РЅР°РґРїРёСЃРµР№ РІ С†РёРєР»Рµ.
 	for (unsigned int i = 0; i < 2; i++) {
 		TechLabels.push_back(*TemplateLabel);
 		TechLabels[i].setFont(*TemplateFont);
 	}
-	//Очистка переменных.
+	//РћС‡РёСЃС‚РєР° РїРµСЂРµРјРµРЅРЅС‹С….
 	delete TemplateLabel, TemplateFont;
 }
 
-//Переключить отображение FPS.
+//РџРµСЂРµРєР»СЋС‡РёС‚СЊ РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ FPS.
 void TechSupport::SwitchShowingFPS(bool IsShowFPS) {
 	this->IsShowFPS = IsShowFPS;
 }
 
-//Возвращает статус отображения FPS.
+//Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚Р°С‚СѓСЃ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ FPS.
 bool TechSupport::IsShowingFPS() {
 	return this->IsShowFPS;
 }
 
-//Выполнение цикла обновления класса.
+//Р’С‹РїРѕР»РЅРµРЅРёРµ С†РёРєР»Р° РѕР±РЅРѕРІР»РµРЅРёСЏ РєР»Р°СЃСЃР°.
 void TechSupport::Update() {
-	//Обновление счётчика FPS.
+	//РћР±РЅРѕРІР»РµРЅРёРµ СЃС‡С‘С‚С‡РёРєР° FPS.
 	if (IsShowFPS) {
 		LastFrameTime += *GlobalTimeAsSeconds;
 		CurrentFPS++;
 
-		//Если прошла секунда.
+		//Р•СЃР»Рё РїСЂРѕС€Р»Р° СЃРµРєСѓРЅРґР°.
 		if (LastFrameTime >= 1.0) {
-			//Уменьшение прошедшего времени на секунду.
+			//РЈРјРµРЅСЊС€РµРЅРёРµ РїСЂРѕС€РµРґС€РµРіРѕ РІСЂРµРјРµРЅРё РЅР° СЃРµРєСѓРЅРґСѓ.
 			LastFrameTime--;
-			//Сохранение текущего FPS.
+			//РЎРѕС…СЂР°РЅРµРЅРёРµ С‚РµРєСѓС‰РµРіРѕ FPS.
 			LastSecondFPS = CurrentFPS;
-			//Обнуление счётчика для следующего цикла.
+			//РћР±РЅСѓР»РµРЅРёРµ СЃС‡С‘С‚С‡РёРєР° РґР»СЏ СЃР»РµРґСѓСЋС‰РµРіРѕ С†РёРєР»Р°.
 			CurrentFPS = 0;
 
 			TechLabels[tsFPS].setString("FPS: " + DUBLIB::ConvertNumberToString(LastSecondFPS));
 		}
 	}
 
-	//Отрисовка технических надписей.
+	//РћС‚СЂРёСЃРѕРІРєР° С‚РµС…РЅРёС‡РµСЃРєРёС… РЅР°РґРїРёСЃРµР№.
 	for (unsigned int i = 0; i < TechLabels.size(); i++) MainWindow->draw(TechLabels[0]);
 }
