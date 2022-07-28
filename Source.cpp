@@ -1,282 +1,4 @@
 #include "Source.h"
-#include "EvolvGen.h"
-
-// --->CenteredLabel
-//=======================================================================================================================//
-
-//Позиционирование строки по середине блока.
-void CenteredLabel::Centering() {
-	//Выравнивание по ширине блока.
-	for (unsigned int i = 0; i < Label.size(); i++) {
-		Label[i].setOrigin(Label[i].getLocalBounds().width / 2, Label[i].getOrigin().y);
-		Label[i].setPosition((float)BlockSize.x / 2.0, Label[i].getPosition().y);
-	}
-	//Расчёт модификатора для выравнивания по высоте блока.
-	float HeightModificator = 0;
-	for (unsigned int i = 0; i < Label.size(); i++) HeightModificator += Label[i].getLocalBounds().height;
-	HeightModificator = BlockSize.y - HeightModificator;
-	HeightModificator /= 2;
-	HeightModificator -= LineSpacing * CharacterSize * Label.size();
-	HeightModificator += LineSpacing * CharacterSize;
-	
-	//Простановка координат по оси Y.
-	for (unsigned int i = 0; i < Label.size(); i++) {
-		//Модификатор межстрочного интервала.
-		float LSC = CharacterSize * LineSpacing;
-
-		if (i == 0) Label[i].setPosition(Label[i].getPosition().x + Position.x, HeightModificator - Label[i].getLocalBounds().top + Position.y);
-		else Label[i].setPosition(Label[i].getPosition().x + Position.x, Label[i - 1].getPosition().y + Label[i - 1].getLocalBounds().height + LSC + Position.y);
-	}
-
-}
-
-//Применение стиля ко всем спрайтам надписи.
-void CenteredLabel::AppendStyle() {
-	for (unsigned int i = 0; i < Label.size(); i++) {
-		Label[i].setFont(*TextFont);
-		Label[i].setCharacterSize(CharacterSize);
-		Label[i].setFillColor(TextColor);
-		Label[i].setStyle(TextStyle);
-	}
-}
-
-//Конструктор: пустой.
-CenteredLabel::CenteredLabel() {
-
-}
-
-//Задаёт окно отрисовки, центрируемую строку и размеры блока отображения. Вызывать после установки всех стилей.
-void CenteredLabel::Initialize(sf::RenderWindow* MainWindow, std::wstring Str, sf::Vector2u BlockSize) {
-
-	//---> Передача аргументов.
-	//=======================================================================================================================//
-	this->MainWindow = MainWindow;
-	this->Str = Str;
-	this->BlockSize = BlockSize;
-
-	//---> Генерация буферов и обработка разделения строчек.
-	//=======================================================================================================================//
-	//Буферный текст SFML для расчёта величины надписи.
-	sf::Text TextBufer;
-	TextBufer.setCharacterSize(CharacterSize);
-	TextBufer.setFillColor(TextColor);
-	TextBufer.setStyle(TextStyle);
-	TextBufer.setFont(*TextFont);
-	//Вектор слов после разбития строки по символам пробела.
-	std::vector<std::wstring> StrBufer = DUBLIB::Split(Str, L' ');
-	//После каждого слова добавить пробел для удобства.
-	for (unsigned int i = 0; i < StrBufer.size(); i++) StrBufer[i] += L" ";
-	//Буфер для прошлой строчки.
-	std::wstring BuferStrOne = StrBufer[0];
-	//Буфер для текущей строчки.
-	std::wstring BuferStrTwo = L"";
-	//Буфер текста для помещения в вектор строчек.
-	sf::Text TextResultString;
-	//Пока размер строчки не будет выходить за пределы блока, добавлять по слову в буфер.
-	for (unsigned int i = 0; i < StrBufer.size(); i++) {
-		//Ко второму буферу строки добавить слово и пробел.
-		BuferStrTwo += StrBufer[i];
-		//Задать текущий буфер строки для расчёта размеров надписи.
-		TextBufer.setString(sf::String::fromUtf8(BuferStrTwo.begin(), BuferStrTwo.end()));
-		//Если надпись шире блока, то прежний буфер добавить в вектор для отрисовки, иначе добавить обновить старый буфер.
-		if (TextBufer.getLocalBounds().width > (float)BlockSize.x * UsedSpace) {
-			//Убрать пробел на конце.
-			BuferStrOne = DUBLIB::DeleteLastCharacters(BuferStrOne, 1);
-			//Буферному спрайту строчки поставить текст без пробела на конце.
-			TextResultString.setString(sf::String::fromUtf8(BuferStrOne.begin(), BuferStrOne.end()));
-			Label.push_back(TextResultString);
-			BuferStrOne = StrBufer[i];
-			BuferStrTwo = L"";
-			//Компенсация сдвига при добавлении в вектор окончательной строчки.
-			i--;
-		}
-		else BuferStrOne = BuferStrTwo;
-	}
-	//Записать последнюю строчку.
-	TextResultString.setString(sf::String::fromUtf8(BuferStrOne.begin(), BuferStrOne.end()));
-	Label.push_back(TextResultString);
-
-	AppendStyle();
-	Centering();
-}
-
-//Передача указателя на шрифт.
-void CenteredLabel::SetFont(sf::Font* TextFont) {
-	this->TextFont = TextFont;
-}
-
-//Задаёт долю ширины блока, в которую нужно вписать текст (отступ от левого и правого края). По умолчанию 1.
-void CenteredLabel::SetUsedSpace(float UsedSpace) {
-	this->UsedSpace = UsedSpace;
-}
-
-//Устанавливает координаты блока.
-void CenteredLabel::SetPosition(sf::Vector2f Postion) {
-	this->Position = Position;
-}
-
-//Устанавливает координаты блока.
-void CenteredLabel::SetPosition(float PostionX, float PostionY) {
-	this->Position = sf::Vector2f(PostionX, PostionY);
-}
-
-//Установка цвета надписи. По умолчанию белый.
-void CenteredLabel::SetColor(sf::Color TextColor) {
-	this->TextColor = TextColor;
-}
-
-//Установка дополнительного стиля для текста.
-void CenteredLabel::SetStyle(sf::Text::Style TextStyle) {
-	this->TextStyle = TextStyle;
-}
-
-//Устанавливает межстрочный интервал в долях размера символа. По умолчанию 0.05 для компенсации артефактов шрифта.
-void CenteredLabel::SetLineSpacing(float LineSpacing) {
-	this->LineSpacing = LineSpacing;
-}
-
-//Установка размера символов. По умолчанию равно 12.
-void CenteredLabel::SetCharacterSize(unsigned int Size) {
-	this->CharacterSize = Size;
-}
-
-//Отрисовка центрированной надписи.
-void CenteredLabel::Update() {
-	for (unsigned int i = 0; i < Label.size(); i++) MainWindow->draw(Label[i]); 
-
-}
-
-// --->CenteredLabel
-//=======================================================================================================================//
-
-//Применение стилей и настроек к надписи.
-void TextBox::AppendStyle() {
-	Label.setFont(*TextFont);
-	Label.setCharacterSize(CharacterSize);
-	Label.setFillColor(TextColor);
-	Label.setStyle(TextStyle);
-	Label.setLineSpacing(LineSpacing);
-	Label.setOutlineColor(OutlineColor);
-	Label.setOutlineThickness(Thickness);
-	Label.setPosition(Position);
-
-}
-
-//Разбитие строки на подстроки методом подстановки символов разрыва строки Windows.
-std::wstring TextBox::LineBreak(sf::Text TextBufer, sf::Font* TextFont, std::wstring Str, unsigned int BlockSizeX) {
-	//Коррекция потери указателя на шрифт при копировании.
-	TextBufer.setFont(*TextFont);
-	//Результат выполнения.
-	std::wstring Result = L"";
-
-	//Проверка необходимости переноса.
-	TextBufer.setString(sf::String::fromUtf8(Str.begin(), Str.end()));
-	if (TextBufer.getLocalBounds().width >= BlockSizeX) {
-		//Строка разбивается по пробелам.
-		std::vector<std::wstring> StringsBufer = DUBLIB::Split(Str, L' ');
-		//Первый буфер: хранит значение из предыдущего цикла, после которого в случае превышения ширины блока переносится текст.
-		std::wstring StrBuferOne = L"";
-		//Второй буфер: к нему добавляются слова, а также на его основе строится размерная модель.
-		std::wstring StrBuferTwo = L"";
-
-		//Добавление пробела в конец всех строк.
-		for (unsigned int i = 0; i < StringsBufer.size(); i++) StringsBufer[i] += L" ";
-
-		//Проверка выхода за пределы области.
-		for (unsigned int i = 0; i < StringsBufer.size(); i++) {
-			//Добавление слова во второй буфер, участвующий в проверке на превышение ширины блока.
-			StrBuferTwo += StringsBufer[i];
-			TextBufer.setString(sf::String::fromUtf8(StrBuferTwo.begin(), StrBuferTwo.end()));
-			///Если длина строки больше ширины блока.
-			if (TextBufer.getLocalBounds().width > BlockSizeX) {
-				//Сохранение результата и добавление символа разрыва строки Windows.
-				Result += StrBuferOne;
-				Result = DUBLIB::Trim(Result);
-				Result += L"\n";
-				//Очистка буферов.
-				StrBuferOne.clear();
-				StrBuferTwo = StringsBufer[i];
-			}
-			else StrBuferOne = StrBuferTwo;
-		}
-		//Если во втором буфере что-то осталось, то добавить в строку.
-		Result += StrBuferTwo;
-	}
-	else Result = Str;
-	return Result;
-}
-
-//Конструктор: пустой.
-TextBox::TextBox() {
-
-}
-
-//Задаёт окно отрисовки и размеры блока отображения. Вызывать после установки всех стилей.
-void TextBox::Initialize(sf::RenderWindow* MainWindow, sf::Vector2u BlockSize) {
-
-	//---> Передача аргументов.
-	//=======================================================================================================================//
-	this->MainWindow = MainWindow;
-	this->BlockSize = BlockSize;
-
-	//---> Генерация надписей.
-	//=======================================================================================================================//
-	AppendStyle();
-	std::wstring ResultString = L"";
-	for (unsigned int i = 0; i < StringsArray.size(); i++) ResultString += LineBreak(Label, TextFont, StringsArray[i], BlockSize.x) + L"\n\n";
-	Label.setString(sf::String::fromUtf8(ResultString.begin(), ResultString.end()));
-}
-
-//Устанавливает позицию в окне.
-void TextBox::SetPosition(sf::Vector2f Position) {
-	this->Position = Position;
-}
-
-//Устанавливает позицию в окне.
-void TextBox::SetPosition(float PositionX, float PositionY) {
-	this->Position = sf::Vector2f(PositionX, PositionY);
-}
-
-//Передача указателя на шрифт.
-void TextBox::SetFont(sf::Font* TextFont) {
-	this->TextFont = TextFont;
-}
-
-//Задаёт межстрочный промежуток в долях от установленного шрифтом. По умолчанию 1.
-void TextBox::SetLineSpacing(float LineSpacing) {
-	this->LineSpacing = LineSpacing;
-}
-
-//Установка цвета надписи. По умолчанию белый.
-void TextBox::SetColor(sf::Color TextColor) {
-	this->TextColor = TextColor;
-}
-
-//Установка дополнительного стиля для текста.
-void TextBox::SetStyle(sf::Text::Style TextStyle) {
-	this->TextStyle = TextStyle;
-}
-
-//Установка текста и толщины обводки.
-void TextBox::SetOutline(sf::Color OutlineColor, float Thickness) {
-	this->OutlineColor = OutlineColor;
-	this->Thickness = Thickness;
-}
-
-//Установка размера символов. По умолчанию равно 12.
-void TextBox::SetCharacterSize(unsigned int Size) {
-	this->CharacterSize = Size;
-}
-
-//Установка текста.
-void TextBox::SetStringsArray(std::vector<std::wstring> StringsArray) {
-	this->StringsArray = StringsArray;
-}
-
-//Отрисовка текстового поля.
-void TextBox::Update() {
-	MainWindow->draw(Label);
-}
 
 //---> Intro
 //=======================================================================================================================//
@@ -457,6 +179,11 @@ void Intro::Update() {
 //---> Credits
 //=======================================================================================================================//
 
+//Закрытие титров.
+void Credits::Close() {
+	Answer = "to_menu";
+}
+
 //Конструктор: задаёт окно отрисовки технических данных.
 Credits::Credits(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds) {
 
@@ -485,13 +212,12 @@ Credits::Credits(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds) {
 	BorderSprite.setTexture(BorderTexture);
 	HeaderTexture.loadFromFile("Data\\Texturepacks\\" + *TexturepackName + "\\GUI\\header.png");
 	HeaderSprite.setTexture(HeaderTexture);
+	HeaderSprite.setScale((float)MainWindow->getSize().x / (float)HeaderTexture.getSize().x, 1.0);
 	EmblemTexture.loadFromFile("Data\\Texturepacks\\" + *TexturepackName + "\\GUI\\emblem.png");
 	EmblemSprite.setTexture(EmblemTexture);
 	EmblemSprite.setOrigin(EmblemTexture.getSize().x / 2, EmblemTexture.getSize().y / 2);
 	EmblemSprite.setPosition(MainWindow->getSize().x / 2, MainWindow->getSize().y / 2 + 48);
 	EmblemSprite.setScale(MainWindow->getSize().y / EmblemTexture.getSize().y / 1.25, MainWindow->getSize().y / EmblemTexture.getSize().y / 1.25);
-	
-	delete TexturepackName;
 
 	//---> Создание центрируемой надписи заголовка.
 	//=======================================================================================================================//
@@ -499,11 +225,24 @@ Credits::Credits(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds) {
 	CenteredLabelObject.SetFont(&TextFont);
 	CenteredLabelObject.SetLineSpacing(0);
 	CenteredLabelObject.SetStyle(sf::Text::Style::Bold);
-	CenteredLabelObject.Initialize(MainWindow, DUBLIB::GetMarkeredStringFromFile(L"Data\\Local\\" + DUBLIB::GetMarkeredStringFromFile(L"Settings.txt", L"game-local") + L".txt", L"credits-header"), sf::Vector2u(HeaderSprite.getTextureRect().width, HeaderSprite.getTextureRect().height));
+	CenteredLabelObject.Initialize(MainWindow, DUBLIB::GetMarkeredStringFromFile(L"Data\\Local\\" + DUBLIB::GetMarkeredStringFromFile(L"Settings.txt", L"game-local") + L".txt", L"credits-header"), sf::Vector2u(MainWindow->getSize().x, HeaderSprite.getTextureRect().height));
+
+	//---> Генерирование кнопки.
+	//=======================================================================================================================//
+	BT_Close.SetPosition(MainWindow->getSize().x - 80, 24);
+	BT_Close.SetSize(48, 48);
+	BT_Close.LoadTexture("Data\\Texturepacks\\" + *TexturepackName + "\\GUI\\button_close_grey.png", 3);
+	BT_Close.Initialize(MainWindow);
+
+	KP_Escape.SetKey(sf::Keyboard::Escape);
+
+	delete TexturepackName;
+
+
 }
 
 //Выполнение цикла обновления класса.
-void Credits::Update() {
+std::string Credits::Update() {
 	//Заливка цветом.
 	MainWindow->clear(sf::Color(158, 120, 119));
 
@@ -547,66 +286,185 @@ void Credits::Update() {
 	MainWindow->draw(BorderSprite);
 	BorderSprite.setPosition(0, MainWindow->getSize().y - 28);
 	MainWindow->draw(BorderSprite);
+
+	//Если титры были закрыты, но обновляются снова, то отменить передачу ответа.
+	if (Answer != "") Answer.clear();
+
+	//Отправка ответа для обработчика меню.
+	if (BT_Close.Update() == Button::Clicked) Close();
+	if (KP_Escape.Update()) Close();
+
+	return Answer;
 }
 
+//---> MainMenu
+//=======================================================================================================================//
 
+//Закрытие главного меню.
+void MainMenu::Close(std::string Message) {
+	//Передача сообщения в обработчик меню.
+	Answer = Message;
+	//Отключение проигрывания музыки.
+	BackgroundMusic.stop();
+}
 
+//Открытие главного меню.
+void MainMenu::Open() {
+	//Воспроизведение фоновой музыки.
+	BackgroundMusic.play();
+}
 
+//Проигрывает звуковой эффект.
+void MainMenu::PlaySoundEffect(unsigned int Index) {
+	if (SoundEffect.getStatus() != sf::Music::Playing) {
+		SoundEffect.openFromFile("Data\\Sounds\\" + SoundsNames[Index] + ".ogg");
+		SoundEffect.play();
+	}
+}
 
+//Проверяет и обрабатывает взаимодействие с кнопками.
+void MainMenu::ButtonInteraction(unsigned int Index) {
+	if (ButtonsStatus[Index] == Button::Hover) {
+		if (LastSoundEffectIndex == 0) {
+			PlaySoundEffect(Index);
+			LastSoundEffectIndex = Index + 1;
+			CL_Description.SetString(ButtonsLabels[Index]);
+		}
+		CL_Description.Update();
+	}
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//Конструктор: загружает игру и включает её обработку.
-Game::Game(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds) {
+//Конструктор: задаёт окно отрисовки технических данных.
+MainMenu::MainMenu(sf::RenderWindow* MainWindow) {
 
 	//---> Передача аргументов.
 	//=======================================================================================================================//
 	this->MainWindow = MainWindow;
-	this->GlobalTimeAsSeconds = GlobalTimeAsSeconds;
-}
 
-//Конструктор: задаёт окно отрисовки технических данных и счётчик времени.
-World::World(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds) {
-
-	//---> Передача аргументов.
+	//---> Подгрузка необходимых текстур.
 	//=======================================================================================================================//
-	this->MainWindow = MainWindow;
-	this->GlobalTimeAsSeconds = GlobalTimeAsSeconds;
+	//Название текстурпака.
+	std::string* TexturepackName = new std::string;
+	*TexturepackName = DUBLIB::GetMarkeredStringFromFile("Settings.txt", "game-texturepack");
+	LogoTexture.loadFromFile("Data\\Texturepacks\\" + *TexturepackName + "\\GUI\\logo.png");
+	LogoSprite.setTexture(LogoTexture);
+	LogoSprite.setOrigin(LogoTexture.getSize().x / 2, LogoTexture.getSize().y / 2);
+	//Масштабирование в 25% высоты окна.
+	float *Scale = new float;
+	*Scale = MainWindow->getSize().y / 4;
+	*Scale = *Scale / LogoTexture.getSize().y;
+	LogoSprite.setScale(*Scale, *Scale);
+
+	LogoSprite.setPosition(MainWindow->getSize().x / 2, LogoSprite.getGlobalBounds().height / 2);
+	BackgroundTexture.loadFromFile("Data\\Texturepacks\\" + *TexturepackName + "\\GUI\\menu_background.png");
+	BackgroundSprite.setTexture(BackgroundTexture);
+	BackgroundSprite.setScale((float)MainWindow->getSize().x / (float)BackgroundTexture.getSize().x, (float)MainWindow->getSize().y / (float)BackgroundTexture.getSize().y);
+
+	//---> Создание кнопок.
+	//=======================================================================================================================//
+	BT_Play.Initialize(MainWindow, sf::Vector2u(57, 48));
+	BT_Play.SetPosition((float)MainWindow->getSize().x * 0.085, (float)MainWindow->getSize().y * 0.66);
+	//Масштабирование в 20% высоты окна.
+	*Scale = MainWindow->getSize().y / 5;
+	*Scale = *Scale / 48;
+	BT_Play.SetScale(*Scale);
+	BT_Play.LoadTexture("Data\\Texturepacks\\" + *TexturepackName + "\\GUI\\menu_button_play.png", 3);
+
+	BT_Credits.Initialize(MainWindow, sf::Vector2u(71, 60));
+	BT_Credits.SetPosition((float)MainWindow->getSize().x * 0.58, (float)MainWindow->getSize().y * 0.66);
+	//Масштабирование в 20% высоты окна.
+	*Scale = MainWindow->getSize().y / 5;
+	*Scale = *Scale / 60;
+	BT_Credits.SetScale(*Scale);
+	BT_Credits.LoadTexture("Data\\Texturepacks\\" + *TexturepackName + "\\GUI\\menu_button_credits.png", 3);
+
+	BT_Exit.Initialize(MainWindow, sf::Vector2u(49, 39));
+	BT_Exit.SetPosition((float)MainWindow->getSize().x * 0.78, (float)MainWindow->getSize().y * 0.66);
+	//Масштабирование в 15% высоты окна.
+	*Scale = MainWindow->getSize().y / 5;
+	*Scale = *Scale / 39;
+	BT_Exit.SetScale(*Scale);
+	BT_Exit.LoadTexture("Data\\Texturepacks\\" + *TexturepackName + "\\GUI\\menu_button_exit.png", 3);
+
+	BT_Settings.Initialize(MainWindow, sf::Vector2u(30, 31));
+	BT_Settings.SetPosition((float)MainWindow->getSize().x * 0.36, (float)MainWindow->getSize().y * 0.66);
+	//Масштабирование в 15% высоты окна.
+	*Scale = MainWindow->getSize().y / 5;
+	*Scale = *Scale / 31;
+	BT_Settings.SetScale(*Scale);
+	BT_Settings.LoadTexture("Data\\Texturepacks\\" + *TexturepackName + "\\GUI\\menu_button_settings.png", 3);
+
+	//---> Загрузка шрифта и надписей.
+	//=======================================================================================================================//
+	//Выбранный язык.
+	std::wstring* Local = new std::wstring;
+	*Local = DUBLIB::GetMarkeredStringFromFile(L"Settings.txt", L"game-local");
+	ButtonsLabels = DUBLIB::GetMarkeredStringsArrayFromFile(L"Data\\Local\\" + *Local + L".txt", L"main-menu");
+	TextFont.loadFromFile("Data\\Fonts\\" + DUBLIB::GetMarkeredStringFromFile("Settings.txt", "game-font-pixel"));
+
+	CL_Description.SetFont(&TextFont);
+	CL_Description.SetPosition(0, MainWindow->getSize().y * 0.85);
+	CL_Description.SetCharacterSize(48);
+	CL_Description.SetStyle(sf::Text::Bold);
+	CL_Description.Initialize(MainWindow, L" ", sf::Vector2u(MainWindow->getSize().x, MainWindow->getSize().y / 5));
+
+	GameVersion.setString(DUBLIB::GetMarkeredStringFromFile("Settings.txt", "version"));
+	GameVersion.setCharacterSize(18);
+	GameVersion.setFont(TextFont);
+	GameVersion.setStyle(sf::Text::Bold);
+	GameVersion.setPosition(18, MainWindow->getSize().y - GameVersion.getLocalBounds().height - 18);
+
+
+	delete TexturepackName;
+
+	//---> Загрузка звуков и музыки.
+	//=======================================================================================================================//
+	BackgroundMusic.openFromFile("Data\\Sounds\\Forest.ogg");
+
+	Open();
+
+	//---> Загрузка шейдеров.
+	//=======================================================================================================================//
+	//BackgroundShader.loadFromFile("Data\\Shaders\\Pixelezation.frag", sf::Shader::Fragment);
+	//BackgroundShader.setUniform("Resolution", sf::Vector2f(1280, 720));
+	//BackgroundShader.setUniform("Texture", sf::Shader::CurrentTexture);
+	//TestTexture.loadFromFile("123.jpg");
+	//TestSprite.setTexture(TestTexture);
+	//Frame.create(1280, 720);
+	
 }
 
 //Выполнение цикла обновления класса.
-void World::Update() {
+std::string MainMenu::Update() {
 
+	MainWindow->draw(BackgroundSprite);
+	MainWindow->draw(LogoSprite);
+	MainWindow->draw(GameVersion);
+
+	//---> Обработка кнопок и сохранение их статусов.
+	//=======================================================================================================================//
+	ButtonsStatus[MenuButtons::Game] = BT_Play.Update();
+	ButtonsStatus[MenuButtons::Settings] = BT_Settings.Update();
+	ButtonsStatus[MenuButtons::Credits] = BT_Credits.Update();
+	ButtonsStatus[MenuButtons::Exit] = BT_Exit.Update();
+
+	//---> Звуковые эффекты наведения на кнопки.
+	//=======================================================================================================================//
+	for (unsigned int i = 0; i <= MenuButtons::Exit; i++) ButtonInteraction(i);
+	if (LastSoundEffectIndex > 0 && ButtonsStatus[LastSoundEffectIndex - 1] == Button::Normal) LastSoundEffectIndex = 0;
+
+	//---> Отправка ответа в обработчик меню.
+	//=======================================================================================================================//
+	//Если главное меню было закрыто, но обновляется снова, то отменить передачу ответа.
+	if (Answer != "") { Answer.clear(); Open(); }
+	//Переход к игре.
+	if (ButtonsStatus[MenuButtons::Game] == Button::Clicked) Close("start_game");
+	//Переход к игре.
+	if (ButtonsStatus[MenuButtons::Settings] == Button::Clicked) Close("to_settings");
+	//Переход к титрам.
+	if (ButtonsStatus[MenuButtons::Credits] == Button::Clicked) Close("to_credits");
+	//Выход из игры.
+	if (ButtonsStatus[MenuButtons::Exit] == Button::Clicked) Close("exit");
+
+	return Answer;
 }

@@ -9,171 +9,7 @@
 #include <Windows.h>
 
 #include "GUI.h"
-
-//Центрируемая надпись.
-//TO-DO: обработка ошибок: высота надписи больше высоты блока, слово длиннее блока.
-class CenteredLabel {
-private:
-
-	//---> Данные.
-	//=======================================================================================================================//
-	//Координаты в окне.
-	sf::Vector2f WindowCoords = { 0.f, 0.f };
-	//Размер блока, внутри которого происходит выравнивание.
-	sf::Vector2u BlockSize;
-	//Центрируемая строка.
-	std::wstring Str;
-	//Используемое пространство ширины блока.
-	float UsedSpace = 1.f;
-	//Межстрочный интервал в долях размера символа.
-	float LineSpacing = 0.05;
-	//Положение начала блока.
-	sf::Vector2f Position = { 0, 0 };
-	
-	//---> Графические компоненты.
-	//=======================================================================================================================//
-	//Указатель на окно отрисовки.
-	sf::RenderWindow* MainWindow;
-	//Цвет надписи.
-	sf::Color TextColor = sf::Color::White;
-	//Шрифт.
-	sf::Font* TextFont;
-	//Размер символа.
-	unsigned int CharacterSize = 12;
-	//Дополнительный стиль текста.
-	sf::Text::Style TextStyle;
-	//Вектор отрисовываемых строчек надписи.
-	std::vector<sf::Text> Label;
-
-protected:
-
-	//---> Функции обработки.
-	//=======================================================================================================================//
-	//Позиционирование строки по середине блока.
-	void Centering();
-	//Применение стиля ко всем спрайтам надписи.
-	void AppendStyle();
-
-public:
-
-	//Конструктор: пустой.
-	CenteredLabel();
-
-	//Задаёт окно отрисовки, центрируемую строку и размеры блока отображения. Вызывать после установки всех стилей.
-	void Initialize(sf::RenderWindow* MainWindow, std::wstring Str, sf::Vector2u BlockSize);
-
-	//Передача указателя на шрифт.
-	void SetFont(sf::Font* TextFont);
-
-	//Задаёт долю ширины блока, в которую нужно вписать текст (отступ от левого и правого края). По умолчанию 1.
-	void SetUsedSpace(float UsedSpace);
-
-	//Устанавливает координаты блока.
-	void SetPosition(sf::Vector2f Postion);
-
-	//Устанавливает координаты блока.
-	void SetPosition(float PostionX, float PostionY);
-
-	//Установка цвета надписи. По умолчанию белый.
-	void SetColor(sf::Color TextColor);
-
-	//Установка дополнительного стиля для текста.
-	void SetStyle(sf::Text::Style TextStyle);
-
-	//Устанавливает межстрочный интервал в долях размера символа. По умолчанию 0.05 для компенсации артефактов шрифта.
-	void SetLineSpacing(float LineSpacing);
-
-	//Установка размера символов. По умолчанию равно 12.
-	void SetCharacterSize(unsigned int Size);
-
-	//Отрисовка центрированной надписи.
-	void Update();
-
-};
-
-//Область для отображения текста с автопереносом строк.
-//TO-DO: позиционирование контейнера, связать со скроллом.
-class TextBox {
-private:
-
-	//---> Данные.
-	//=======================================================================================================================//
-	//Координаты в окне.
-	sf::Vector2f Position = { 0, 0 };
-	//Размер блока, внутри которого находится текст.
-	sf::Vector2u BlockSize;
-	//Межстрочный промежуток в долях от установленного шрифтом.
-	float LineSpacing = 1.0;
-
-	//---> Графические компоненты.
-	//=======================================================================================================================//
-	//Указатель на окно отрисовки.
-	sf::RenderWindow* MainWindow;
-	//Цвет надписи.
-	sf::Color TextColor = sf::Color::White;
-	//Шрифт.
-	sf::Font* TextFont;
-	//Размер символа.
-	unsigned int CharacterSize = 12;
-	//Цвет обводки.
-	sf::Color OutlineColor = sf::Color::Black;
-	//Толщина обводки.
-	float Thickness = 0;
-	//Дополнительный стиль текста.
-	sf::Text::Style TextStyle;
-	//Отрисовываемая строка.
-	sf::Text Label;
-	//Строки текста.
-	std::vector<std::wstring> StringsArray;
-
-protected:
-
-	//---> Функции обработки.
-	//=======================================================================================================================//
-	//Применение стилей к надписи.
-	void AppendStyle();
-	//Разбитие строки на подстроки методом подстановки символов разрыва строки Windows.
-	std::wstring LineBreak(sf::Text TextBufer, sf::Font* TextFont, std::wstring Str, unsigned int BlockSizeX);
-
-public:
-
-	//Конструктор: пустой.
-	TextBox();
-
-	//Задаёт окно отрисовки и размеры блока отображения. Вызывать после установки всех стилей.
-	void Initialize(sf::RenderWindow* MainWindow, sf::Vector2u BlockSize);
-
-	//Устанавливает позицию в окне.
-	void SetPosition(sf::Vector2f Position);
-
-	//Устанавливает позицию в окне.
-	void SetPosition(float PositionX, float PositionY);
-
-	//Передача указателя на шрифт.
-	void SetFont(sf::Font* TextFont);
-
-	//Задаёт межстрочный промежуток в долях от установленного шрифтом. По умолчанию 1.
-	void SetLineSpacing(float LineSpacing);
-
-	//Установка цвета надписи. По умолчанию белый.
-	void SetColor(sf::Color TextColor);
-
-	//Установка дополнительного стиля для текста.
-	void SetStyle(sf::Text::Style TextStyle);
-
-	//Установка текста и толщины обводки.
-	void SetOutline(sf::Color OutlineColor, float Thickness);
-
-	//Установка размера символов. По умолчанию равно 12.
-	void SetCharacterSize(unsigned int Size);
-
-	//Установка текста.
-	void SetStringsArray(std::vector<std::wstring> StringsArray);
-
-	//Отрисовка центрированной надписи.
-	void Update();
-
-};
+#include "EvolvGen.h"
 
 //Вступительный ролик.
 //TO-DO: выставить время кадров, исчезновение надписи с пропуском через 5 секунд.
@@ -208,7 +44,6 @@ private:
 	bool StartAttenuationAnimation = false;
 	//Проигрывалась ли в этом кадре анимация затухания.
 	bool IsAttenuationAnimationWasPlayed = false;
-
 	//Обработчик нажатий пробела для пропуска ролика.
 	KeystrokesProcessing KP_Space;
 	//Количество нажатий пробела.
@@ -262,7 +97,7 @@ public:
 };
 
 //Титры.
-//TO-DO: кнопка закрытия, закрывать по нажатию на ESC.
+//TO-DO: скроллинг титров.
 class Credits {
 private:
 
@@ -274,6 +109,8 @@ private:
 	unsigned int BorderAmountX;
 	//Количество отрисовываемых фрагментов рамок по оси Y.
 	unsigned int BorderAmountY;
+	//Ответ для обработчика меню.
+	std::string Answer = "";
 
 	//---> Графические компоненты.
 	//=======================================================================================================================//
@@ -299,7 +136,17 @@ private:
 	sf::Texture EmblemTexture;
 	//Спрайт фоновой эмблемы.
 	sf::Sprite EmblemSprite;
+	//Кнопка закрытия титров.
+	Button BT_Close;
+	//Обработчик закрытия по Escape.
+	KeystrokesProcessing KP_Escape;
 
+protected:
+
+	//---> Функции обработки.
+	//=======================================================================================================================//
+	//Закрытие титров.
+	void Close();
 
 public:
 
@@ -307,104 +154,85 @@ public:
 	Credits(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds);
 
 	//Выполнение цикла обновления класса.
-	void Update();
+	std::string Update();
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//Перечисление типов играбельных классов.
-enum CharacterClasses { Warrior = 1, Wizard = 2, Archer = 3 };
-
-//Структура хараткеристик персонажа.
-struct PlayerStats {
-	unsigned int HP;
-	unsigned int MP;
-	unsigned int Damage;
-	unsigned int Armor;
-	unsigned int Intelligence;
-};
-
-class Player {
+//Главное меню.
+//TO-DO: сплэш-надписи, включение вступительного ролика.
+class MainMenu {
 private:
 
 	//---> Данные.
 	//=======================================================================================================================//
-	//Класс игрока.
-	unsigned int PlayerClass;
-	//Характеристики игрока.
-	PlayerStats GamerStats;
-
-public:
-
-
-
-};
-
-class World {
-private:
-
-	//---> Данные.
-	//=======================================================================================================================//
-	//Указатель на время последнего кадра в секундах.
-	double* GlobalTimeAsSeconds;
+	//Ответ для обработчика меню.
+	std::string Answer = "";
+	//Фоновая музыка.
+	sf::Music BackgroundMusic;
+	//Звуковые эффекты для кнопок меню.
+	sf::Music SoundEffect;
+	//Перечисление кнопок меню.
+	enum MenuButtons { Game = 0, Settings, Credits, Exit };
+	//Список звуковых эффектов.
+	std::vector<std::string> SoundsNames = { "menu_game", "menu_settings", "menu_credits", "menu_exit" };
+	//Буфер для статусов кнопок.
+	std::vector<unsigned int> ButtonsStatus = { 0, 0, 0, 0 };
+	//Индекс последнего проигранного звукового эффекта для предотвращения залипания.
+	unsigned int LastSoundEffectIndex = 0;
+	//Подписи кнопок.
+	std::vector<std::wstring> ButtonsLabels;
 
 	//---> Графические компоненты.
 	//=======================================================================================================================//
 	//Указатель на окно отрисовки.
 	sf::RenderWindow* MainWindow;
+	//Текстура лого.
+	sf::Texture LogoTexture;
+	//Спрайт лого.
+	sf::Sprite LogoSprite;
+	//Текстура фона.
+	sf::Texture BackgroundTexture;
+	//Спрайт фона.
+	sf::Sprite BackgroundSprite;
+	//Кнопка «играть».
+	Button BT_Play;
+	//Кнопка «настройки».
+	Button BT_Settings;
+	//Кнопка «титры».
+	Button BT_Credits;
+	//Кнопка «выйти из игры».
+	Button BT_Exit;
+	//Подписи кнопок.
+	CenteredLabel CL_Description;
+	//Шрифт текста.
+	sf::Font TextFont;
+	//Версия игры.
+	sf::Text GameVersion;
+
+	//Шейдер заливки фона меню.
+	//sf::Shader BackgroundShader;
+	//Сцена.
+	//sf::RenderTexture Frame;
+
+protected:
+
+	//---> Функции обработки.
+	//=======================================================================================================================//
+	//Закрытие главного меню.
+	void Close(std::string Message);
+	//Открытие главного меню.
+	void Open();
+	//Проигрывает звуковой эффект.
+	void PlaySoundEffect(unsigned int Index);
+	//Проверяет и обрабатывает взаимодействие с кнопками.
+	void ButtonInteraction(unsigned int Index);
 
 public:
 
-	//Конструктор: задаёт окно отрисовки технических данных и счётчик времени.
-	World(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds);
+	//Конструктор: задаёт окно отрисовки технических данных.
+	MainMenu(sf::RenderWindow* MainWindow);
 
 	//Выполнение цикла обновления класса.
-	void Update();
+	std::string Update();
 };
 
-class Game {
-private:
-
-	//---> Данные.
-	//=======================================================================================================================//
-	//Указатель на время последнего кадра в секундах.
-	double* GlobalTimeAsSeconds;
-
-	//---> Графические компоненты.
-	//=======================================================================================================================//
-	//Указатель на окно отрисовки.
-	sf::RenderWindow* MainWindow;
-
-	//---> Взаимодействие с миром.
-	//=======================================================================================================================//
-	//Отрисовка мира.
-	void DrawMap();
-
-public:
-
-	//Конструктор: задаёт окно отрисовки технических данных и счётчик времени.
-	Game(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds);
-
-	//Выполнение цикла обновления класса.
-	void Update();
-};
