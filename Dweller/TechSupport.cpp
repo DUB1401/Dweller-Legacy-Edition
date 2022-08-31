@@ -1,5 +1,4 @@
 #include "TechSupport.h"
-#include "EvolvGen.h"
 
 struct cpuid_regs {
 	DWORD   Eax;

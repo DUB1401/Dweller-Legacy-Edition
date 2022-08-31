@@ -1,7 +1,5 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-
 #include "../EvolvGen.h"
 
 //Область для отображения текста с автопереносом строк.

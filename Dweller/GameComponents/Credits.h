@@ -1,13 +1,14 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-
 #include "../EvolvGen.h"
 
 #include "../GUI/KeystrokesProcessing.h"
 #include "../GUI/CenteredLabel.h"
 #include "../GUI/TextBox.h"
 #include "../GUI/Button.h"
+
+#include "../Source/Settings.h"
+#include "../Source/Data.h"
 
 //Титры.
 //TO-DO: скроллинг титров.
@@ -22,8 +23,10 @@ private:
 	unsigned int BorderAmountX;
 	//Количество отрисовываемых фрагментов рамок по оси Y.
 	unsigned int BorderAmountY;
-	//Ответ для обработчика меню.
-	std::string Answer = "";
+	//Ответ для обработчика слоёв.
+	LayoutAnswer Answer;
+	//Указатель на глобальные настройки.
+	Settings* ObjectSettings;
 
 	//---> Графические компоненты.
 	//=======================================================================================================================//
@@ -61,14 +64,14 @@ protected:
 	//---> Функции обработки.
 	//=======================================================================================================================//
 	//Закрытие титров.
-	void Close();
+	void Close(std::string To, std::string From);
 
 public:
 
 	//Конструктор: задаёт окно отрисовки технических данных.
-	Credits(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds);
+	Credits(sf::RenderWindow* MainWindow, Settings* ObjectSettings, double* GlobalTimeAsSeconds);
 
 	//Выполнение цикла обновления класса.
-	std::string Update();
+	LayoutAnswer Update();
 
 };

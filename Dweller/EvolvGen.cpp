@@ -1,5 +1,3 @@
-#include <SFML/Graphics.hpp>
-
 #include "EvolvGen.h"
 
 //Преобразование и анализ типов данных.

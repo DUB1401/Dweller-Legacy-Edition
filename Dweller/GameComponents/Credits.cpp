@@ -4,40 +4,40 @@
 //=======================================================================================================================//
 
 //Закрытие титров.
-void Credits::Close() {
-	Answer = "to_menu";
+void Credits::Close(std::string To, std::string From) {
+	Answer.to = To;
+	Answer.from = From;
 }
 
 //Конструктор: задаёт окно отрисовки технических данных.
-Credits::Credits(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds) {
+Credits::Credits(sf::RenderWindow* MainWindow, Settings* ObjectSettings, double* GlobalTimeAsSeconds) {
 
 	//---> Передача аргументов.
 	//=======================================================================================================================//
 	this->MainWindow = MainWindow;
+	this->ObjectSettings = ObjectSettings;
 	this->GlobalTimeAsSeconds = GlobalTimeAsSeconds;
 
 	//---> Загрузка титров и настройка текстовой области.
 	//=======================================================================================================================//
-	TextFont.loadFromFile("Data\\Fonts\\" + DUBLIB::GetMarkeredStringFromFile("Settings.txt", "game-font"));
+	TextFont.loadFromFile("Data\\Fonts\\" + ObjectSettings->Font.AsString());
 	TextBoxObject.SetCharacterSize(18);
 	TextBoxObject.SetFont(&TextFont);
 	TextBoxObject.SetPosition(28, 28 + 96);
 	TextBoxObject.SetOutline(sf::Color::Black, 0.5);
-	TextBoxObject.SetStringsArray(DUBLIB::GetMarkeredStringsArrayFromFile(L"Data\\Local\\" + DUBLIB::GetMarkeredStringFromFile(L"Settings.txt", L"game-local") + L".txt", L"credits"));
+	TextBoxObject.SetStringsArray(DUBLIB::GetMarkeredStringsArrayFromFile(L"Data\\Local\\" + ObjectSettings->Local.AsWstring() + L".txt", L"credits"));
 	TextBoxObject.Initialize(MainWindow, sf::Vector2u(MainWindow->getSize().x - 56, MainWindow->getSize().y));
 
 	//---> Загрузка текстур.
 	//=======================================================================================================================//
 	BorderAmountX = MainWindow->getSize().x / 48;
 	BorderAmountY = MainWindow->getSize().y / 28;
-	std::string* TexturepackName = new std::string;
-	*TexturepackName = DUBLIB::GetMarkeredStringFromFile("Settings.txt", "game-texturepack");
-	BorderTexture.loadFromFile("Data\\Texturepacks\\" + *TexturepackName + "\\GUI\\border.png");
+	BorderTexture.loadFromFile("Data\\Texturepacks\\" + ObjectSettings->Texturepack.AsString() + "\\GUI\\border.png");
 	BorderSprite.setTexture(BorderTexture);
-	HeaderTexture.loadFromFile("Data\\Texturepacks\\" + *TexturepackName + "\\GUI\\header.png");
+	HeaderTexture.loadFromFile("Data\\Texturepacks\\" + ObjectSettings->Texturepack.AsString() + "\\GUI\\header.png");
 	HeaderSprite.setTexture(HeaderTexture);
 	HeaderSprite.setScale((float)MainWindow->getSize().x / (float)HeaderTexture.getSize().x, 1.0);
-	EmblemTexture.loadFromFile("Data\\Texturepacks\\" + *TexturepackName + "\\GUI\\emblem.png");
+	EmblemTexture.loadFromFile("Data\\Texturepacks\\" + ObjectSettings->Texturepack.AsString() + "\\GUI\\emblem.png");
 	EmblemSprite.setTexture(EmblemTexture);
 	EmblemSprite.setOrigin(EmblemTexture.getSize().x / 2, EmblemTexture.getSize().y / 2);
 	EmblemSprite.setPosition(MainWindow->getSize().x / 2, MainWindow->getSize().y / 2 + 48);
@@ -49,24 +49,22 @@ Credits::Credits(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds) {
 	CenteredLabelObject.SetFont(&TextFont);
 	CenteredLabelObject.SetLineSpacing(0);
 	CenteredLabelObject.SetStyle(sf::Text::Style::Bold);
-	CenteredLabelObject.Initialize(MainWindow, DUBLIB::GetMarkeredStringFromFile(L"Data\\Local\\" + DUBLIB::GetMarkeredStringFromFile(L"Settings.txt", L"game-local") + L".txt", L"credits-header"), sf::Vector2u(MainWindow->getSize().x, HeaderSprite.getTextureRect().height));
+	CenteredLabelObject.Initialize(MainWindow, DUBLIB::GetMarkeredStringFromFile(L"Data\\Local\\" + ObjectSettings->Local.AsWstring() + L".txt", L"credits-header"), sf::Vector2u(MainWindow->getSize().x, HeaderSprite.getTextureRect().height));
 
 	//---> Генерирование кнопки.
 	//=======================================================================================================================//
 	BT_Close.SetPosition(MainWindow->getSize().x - 80, 24);
 	BT_Close.SetSize(48, 48);
-	BT_Close.LoadTexture("Data\\Texturepacks\\" + *TexturepackName + "\\GUI\\button_close_grey.png", 3);
+	BT_Close.LoadTexture("Data\\Texturepacks\\" + ObjectSettings->Texturepack.AsString() + "\\GUI\\button_close_grey.png", 3);
 	BT_Close.Initialize(MainWindow);
 
 	KP_Escape.SetKey(sf::Keyboard::Escape);
-
-	delete TexturepackName;
 
 
 }
 
 //Выполнение цикла обновления класса.
-std::string Credits::Update() {
+LayoutAnswer Credits::Update() {
 	//Заливка цветом.
 	MainWindow->clear(sf::Color(158, 120, 119));
 
@@ -112,11 +110,10 @@ std::string Credits::Update() {
 	MainWindow->draw(BorderSprite);
 
 	//Если титры были закрыты, но обновляются снова, то отменить передачу ответа.
-	if (Answer != "") Answer.clear();
+	if (Answer.Empty()) Answer.Clear();
 
 	//Отправка ответа для обработчика меню.
-	if (BT_Close.Update() == Button::Clicked) Close();
-	if (KP_Escape.Update()) Close();
+	if (BT_Close.Update() == Button::Clicked || KP_Escape.Update()) Close("menu", "credits");
 
 	return Answer;
 }

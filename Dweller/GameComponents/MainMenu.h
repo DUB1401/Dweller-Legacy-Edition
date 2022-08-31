@@ -1,14 +1,12 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-
 #include "../EvolvGen.h"
 
 #include "../GUI/CenteredLabel.h"
 #include "../GUI/Button.h"
 
-#include "../Source.h"
+#include "../Source/Settings.h"
+#include "../Source/Data.h"
 
 //Главное меню.
 //TO-DO: сплэш-надписи, включение вступительного ролика.
@@ -19,8 +17,8 @@ private:
 	//=======================================================================================================================//
 	//Указатель на глобальные настройки.
 	Settings* ObjectSettings;
-	//Ответ для обработчика меню.
-	std::string Answer = "";
+	//Ответ для обработчика слоёв.
+	LayoutAnswer Answer;
 	//Фоновая музыка.
 	sf::Music BackgroundMusic;
 	//Звуковые эффекты для кнопок меню.
@@ -73,7 +71,7 @@ protected:
 	//---> Функции обработки.
 	//=======================================================================================================================//
 	//Закрытие главного меню.
-	void Close(std::string Message);
+	void Close(std::string To, std::string From);
 	//Открытие главного меню.
 	void Open();
 	//Проигрывает звуковой эффект.
@@ -87,5 +85,5 @@ public:
 	MainMenu(sf::RenderWindow* MainWindow, Settings* ObjectSettings);
 
 	//Выполнение цикла обновления класса.
-	std::string Update();
+	LayoutAnswer Update();
 };

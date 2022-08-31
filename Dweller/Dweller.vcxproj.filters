@@ -25,6 +25,12 @@
     <Filter Include="Файлы заголовков\GUI">
       <UniqueIdentifier>{a3199f72-5838-4527-85f8-6d6aad7a64fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\Source">
+      <UniqueIdentifier>{49dcea95-f315-4cc3-8f91-93a8684f4966}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Source">
+      <UniqueIdentifier>{5be54a21-2497-4127-a26e-d51f98f1ac0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -60,12 +66,15 @@
     <ClCompile Include="GameComponents\MainMenu.cpp">
       <Filter>Исходные файлы\GameComponents</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Settings.cpp">
+      <Filter>Исходные файлы\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Data.cpp">
+      <Filter>Исходные файлы\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EvolvGen.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="TechSupport.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Source.h">
@@ -94,6 +103,15 @@
     </ClInclude>
     <ClInclude Include="GameComponents\MainMenu.h">
       <Filter>Файлы заголовков\GameComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Settings.h">
+      <Filter>Файлы заголовков\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Data.h">
+      <Filter>Файлы заголовков\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="TechSupport.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,14 +1,12 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-
 #include "../EvolvGen.h"
 
 #include "../GUI/KeystrokesProcessing.h"
 #include "../GUI/CenteredLabel.h"
 
-#include "../Source.h"
+#include "../Source/Settings.h"
+#include "../Source/Data.h"
 
 //Вступительный ролик.
 //TO-DO: выставить время кадров, исчезновение надписи с пропуском через 5 секунд.
@@ -49,6 +47,8 @@ private:
 	KeystrokesProcessing KP_Space;
 	//Количество нажатий пробела.
 	unsigned int SpaceWasPresed = 0;
+	//Ответ для обработчика слоёв.
+	LayoutAnswer Answer;
 
 	//---> Графические компоненты.
 	//=======================================================================================================================//
@@ -91,8 +91,8 @@ public:
 	bool Start();
 
 	//Останавливает вступительный ролик.
-	void End();
+	void End(std::string To, std::string From);
 
 	//Выполнение цикла обновления класса.
-	void Update();
+	LayoutAnswer Update();
 };

@@ -112,7 +112,7 @@ bool Intro::Start() {
 }
 
 //Останавливает вступительный ролик.
-void Intro::End() {
+void Intro::End(std::string To, std::string From) {
 	IntroMusic.stop();
 	ElapsedTime = 0;
 	IllustrationIndex = 0;
@@ -123,10 +123,12 @@ void Intro::End() {
 	StartAttenuationAnimation = false;
 	IsAttenuationAnimationWasPlayed = false;
 	SpaceWasPresed = 0;
+	Answer.to = To;
+	Answer.from = From;
 }
 
 //Выполнение цикла обновления класса.
-void Intro::Update() {
+LayoutAnswer Intro::Update() {
 	//Пока включен ролик.
 	if (IsEnabled) {
 		//Если первый цикл, то проставить спрайтам указатели на текстуры.
@@ -168,7 +170,8 @@ void Intro::Update() {
 		//Обработка прерывания ролика по требованию пользователя.
 		if (KP_Space.Update()) SpaceWasPresed++;
 		if (SpaceWasPresed == 1) PressAnyKey.Update();
-		if (SpaceWasPresed == 2) End();
+		if (SpaceWasPresed == 2) End("menu", "intro");
 
 	}
+	return Answer;
 }

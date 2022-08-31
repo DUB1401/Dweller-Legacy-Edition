@@ -2,15 +2,11 @@
 
 #pragma comment (lib, "dxgi.lib")
 
-#include <SFML/Graphics.hpp>
-
-#include <iostream>
-#include <Windows.h>
+#include "EvolvGen.h"
 
 #include <dxgi.h>
 #include <comdef.h>
 #include <ShlObj_core.h>
-
 #include <intrin.h>
 #include <bitset>
 #include <array>

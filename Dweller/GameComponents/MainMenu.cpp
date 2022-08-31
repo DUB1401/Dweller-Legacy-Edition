@@ -4,9 +4,10 @@
 //=======================================================================================================================//
 
 //Закрытие главного меню.
-void MainMenu::Close(std::string Message) {
+void MainMenu::Close(std::string To, std::string From) {
 	//Передача сообщения в обработчик меню.
-	Answer = Message;
+	Answer.from = From;
+	Answer.to = To;
 	//Отключение проигрывания музыки.
 	BackgroundMusic.stop();
 }
@@ -48,7 +49,6 @@ MainMenu::MainMenu(sf::RenderWindow* MainWindow, Settings* ObjectSettings) {
 	//---> Подгрузка необходимых текстур.
 	//=======================================================================================================================//
 	//Название текстурпака.
-	std::string* TexturepackName = new std::string;
 	LogoTexture.loadFromFile("Data\\Texturepacks\\" + ObjectSettings->Texturepack.AsString() + "\\GUI\\logo.png");
 	LogoSprite.setTexture(LogoTexture);
 	LogoSprite.setOrigin(LogoTexture.getSize().x / 2, LogoTexture.getSize().y / 2);
@@ -96,6 +96,7 @@ MainMenu::MainMenu(sf::RenderWindow* MainWindow, Settings* ObjectSettings) {
 	*Scale = *Scale / 31;
 	BT_Settings.SetScale(*Scale);
 	BT_Settings.LoadTexture("Data\\Texturepacks\\" + ObjectSettings->Texturepack.AsString() + "\\GUI\\menu_button_settings.png", 3);
+	delete Scale;
 
 	//---> Загрузка шрифта и надписей.
 	//=======================================================================================================================//
@@ -119,7 +120,6 @@ MainMenu::MainMenu(sf::RenderWindow* MainWindow, Settings* ObjectSettings) {
 	//---> Загрузка звуков и музыки.
 	//=======================================================================================================================//
 	BackgroundMusic.openFromFile("Data\\Sounds\\Forest.ogg");
-
 	Open();
 
 	//---> Загрузка шейдеров.
@@ -134,7 +134,7 @@ MainMenu::MainMenu(sf::RenderWindow* MainWindow, Settings* ObjectSettings) {
 }
 
 //Выполнение цикла обновления класса.
-std::string MainMenu::Update() {
+LayoutAnswer MainMenu::Update() {
 
 	MainWindow->draw(BackgroundSprite);
 	MainWindow->draw(LogoSprite);
@@ -154,16 +154,14 @@ std::string MainMenu::Update() {
 
 	//---> Отправка ответа в обработчик меню.
 	//=======================================================================================================================//
-	//Если главное меню было закрыто, но обновляется снова, то отменить передачу ответа.
-	if (Answer != "") { Answer.clear(); Open(); }
 	//Переход к игре.
-	if (ButtonsStatus[static_cast<unsigned int>(MenuButtons::Game)] == Button::Clicked) Close("start_game");
+	if (ButtonsStatus[static_cast<unsigned int>(MenuButtons::Game)] == Button::Clicked) Close("start_game", "menu");
 	//Переход к игре.
-	if (ButtonsStatus[static_cast<unsigned int>(MenuButtons::Settings)] == Button::Clicked) Close("to_settings");
+	if (ButtonsStatus[static_cast<unsigned int>(MenuButtons::Settings)] == Button::Clicked) Close("settings", "menu");
 	//Переход к титрам.
-	if (ButtonsStatus[static_cast<unsigned int>(MenuButtons::Credits)] == Button::Clicked) Close("to_credits");
+	if (ButtonsStatus[static_cast<unsigned int>(MenuButtons::Credits)] == Button::Clicked) Close("credits", "menu");
 	//Выход из игры.
-	if (ButtonsStatus[static_cast<unsigned int>(MenuButtons::Exit)] == Button::Clicked) Close("exit");
+	if (ButtonsStatus[static_cast<unsigned int>(MenuButtons::Exit)] == Button::Clicked) Close("exit", "menu");
 
 	return Answer;
 }

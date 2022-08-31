@@ -1,21 +1,27 @@
 #pragma once
 
 #pragma warning(disable : 4244)
-
-#include <sstream>
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <windows.h>
-
-#include "SFML/System.hpp"
+#pragma warning(disable : 4305)
 
 #define Cout std::cout
 #define Wout std::wcout
 #define Cin std::cin
 #define Endl std::endl
 
-//Перечисления и дополнительные данные.
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+#include <SFML/System.hpp>
+
+#include <windows.h>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <vector>
+#include <map>
+
+
+
+//Перечисления и типы данных.
 namespace DUBLIB {
 
 	//Стандартные цвета, доступные для установки в консоль Windows.
@@ -23,6 +29,7 @@ namespace DUBLIB {
 
 	//Типы строковых кодировок.
 	enum class Encodings { ANSI = 0, UTF8, UTF16, UTF32 };
+
 }
 
 //Преобразование и анализ типов данных.

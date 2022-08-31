@@ -1,85 +1,100 @@
 #include "Source.h"
 
-//---> Settings
+//---> LayoutsController
 //=======================================================================================================================//
 
-//Выводит в консоль bool красного или зелёного цвета соответственно логике и переводит вывод на новую строку.
-void Settings::PrintBool(bool Value) {
-	if (Value) {
-		DUBLIB::SetWindowsConsoleColor(DUBLIB::CMD_Colors::clLightGreen);
-		Wout << "true" << Endl;
-		DUBLIB::SetWindowsConsoleColor(DUBLIB::CMD_Colors::clLightGray);
+//Обновляет текущий слой.
+void LayoutsController::Processing() {
+	Answer.Clear();
+	switch (MenuUpdateIndex) {
+	case 0:
+		//Выход из игры.
+		exit(EXIT_SUCCESS);
+		break;
+	case 1:
+		//Вступительный ролик.
+		Answer = ObjectIntro->Update();
+		break;
+	case 2:
+		//Главное меню.
+		Answer = ObjectMainMenu->Update();
+		break;
+	case 3:
+		//Титры.
+		Answer = ObjectCredits->Update();
+		break;
 	}
-	else {
-		DUBLIB::SetWindowsConsoleColor(DUBLIB::CMD_Colors::clLightRed);
-		Wout << "false" << Endl;
-		DUBLIB::SetWindowsConsoleColor(DUBLIB::CMD_Colors::clLightGray);
+}
+
+//Выделить память.
+void LayoutsController::AllocateMemory() {
+	//Выделение памяти: вступительный ролик.
+	if (Answer.to == "intro") ObjectIntro = new Intro(MainWindow, ObjectSettings, GlobalTimeAsSeconds, GlobalTimeAsMicroseconds);
+	//Выделение памяти: главное меню.
+	if (Answer.to == "menu") ObjectMainMenu = new MainMenu(MainWindow, ObjectSettings);
+	//Выделение памяти: титры.
+	if (Answer.to == "credits") ObjectCredits = new Credits(MainWindow, ObjectSettings, GlobalTimeAsSeconds);
+}
+
+//Освободить память.
+void LayoutsController::FreeMemory() {
+	//Освобождение памяти: титры.
+	if (Answer.from == "intro") delete ObjectIntro;
+	//Освобождение памяти: главное меню.
+	if (Answer.from == "menu") delete ObjectMainMenu;
+	//Освобождение памяти: титры.
+	if (Answer.from == "credits") delete ObjectCredits;
+}
+
+//Устанавливает индекс целевого слоя на основе ответа.
+void LayoutsController::SetNewUpdateIndex() {
+	//Если ответ не пустой, то обновить индекс.
+	if (!Answer.Empty()) MenuUpdateIndex = LayoutsDefinitions[Answer.to];
+}
+
+//Конструктор: инициалзиация объекта.
+LayoutsController::LayoutsController(sf::RenderWindow* MainWindow, Settings* ObjectSettings) {
+
+	//---> Передача аргументов.
+	//=======================================================================================================================//
+	this->ObjectSettings = ObjectSettings;
+	this->MainWindow = MainWindow;
+
+	//---> Инициализация контейнера определений слоёв.
+	//=======================================================================================================================//
+	LayoutsDefinitions["exit"] = 0;
+	LayoutsDefinitions["intro"] = 1;
+	LayoutsDefinitions["menu"] = 2;
+	LayoutsDefinitions["credits"] = 3;
+
+	//---> Инициализация стартового слоя.
+	//=======================================================================================================================//
+	Answer.to = "menu";
+	SetNewUpdateIndex();
+	AllocateMemory();
+	Answer.Clear();
+}
+
+//Устанавливает указатели на время кадра.
+void LayoutsController::SetElapsedTimeContainers(double* GlobalTimeAsSeconds, double* GlobalTimeAsMiliseconds, unsigned long long int* GlobalTimeAsMicroseconds) {
+	this->GlobalTimeAsSeconds = GlobalTimeAsSeconds;
+	this->GlobalTimeAsMiliseconds = GlobalTimeAsMiliseconds;
+	this->GlobalTimeAsMicroseconds = GlobalTimeAsMicroseconds;
+}
+
+//Обновление текущего слоя и его ответа.
+void LayoutsController::Update() {
+	Processing();
+	//Если получен ответ, то обработать его.
+	if (!Answer.Empty()) {
+		SetNewUpdateIndex();
+		FreeMemory();
+		AllocateMemory();
 	}
+
 }
 
-//Выводит в консоль int голубого цвета.
-void Settings::PrintInt(int Value) {
-	DUBLIB::SetWindowsConsoleColor(DUBLIB::CMD_Colors::clCyan);
-	Wout << Value;
-	DUBLIB::SetWindowsConsoleColor(DUBLIB::CMD_Colors::clLightGray);
-}
 
-//Переход на новую строку.
-void Settings::Empl() {
-	Wout << Endl;
-}
 
-//Конструктор: загрузка из файла настроек.
-Settings::Settings(std::wstring Path) {
-	LoadFromFile(Path);
-}
 
-//Загрузка из файла настроек.
-void Settings::LoadFromFile(std::wstring Path) {
-	//---> Версии и объявления.
-	//=======================================================================================================================//
-	Version = DUBLIB::GetMarkeredStringFromFile(Path, L"version");
-	Sfml = DUBLIB::GetMarkeredStringFromFile(Path, L"sfml");
-
-	//---> Настройки видеовывода.
-	//=======================================================================================================================//
-	WindowWidth = DUBLIB::GetMarkeredIntFromFile(Path, L"window-width");
-	WindowHeight = DUBLIB::GetMarkeredIntFromFile(Path, L"window-height");
-	VerticalSync = DUBLIB::GetMarkeredBoolFromFile(Path, L"window-verticalSync");
-	FramerateLimit = DUBLIB::GetMarkeredIntFromFile(Path, L"window-framerateLimit");
-	Fullscreen = DUBLIB::GetMarkeredBoolFromFile(Path, L"window-fullscreen");
-	ShowFPS = DUBLIB::GetMarkeredBoolFromFile(Path, L"window-showFPS");
-
-	//---> Настройки окружения игры.
-	//=======================================================================================================================//
-	Music = DUBLIB::GetMarkeredBoolFromFile(Path, L"game-music");
-	Sounds = DUBLIB::GetMarkeredBoolFromFile(Path, L"game-sounds");
-	Local = DUBLIB::GetMarkeredStringFromFile(Path, L"game-local");
-	Texturepack = DUBLIB::GetMarkeredStringFromFile(Path, L"game-texturepack");
-	Font = DUBLIB::GetMarkeredStringFromFile(Path, L"game-font");
-	PixelFont = DUBLIB::GetMarkeredStringFromFile(Path, L"game-font-pixel");
-}
-
-//Выводит в консоль все настройки.
-void Settings::Print() {
-	Cout << "Game version: " << Version.AsString() << Endl;
-	Wout << L"SFML: " << Sfml.AsWstring() << Endl;
-	Wout << L"============================================================" << Endl;
-	Wout << L"Winodow size: "; PrintInt(WindowWidth); Wout << L"x"; PrintInt(WindowHeight); Empl();
-	Wout << L"Vertical Sync enabled: "; PrintBool(VerticalSync);
-
-	Wout << L"Framerate limit: ";
-	if (FramerateLimit) { PrintInt(FramerateLimit); Empl(); }
-	else PrintBool(FramerateLimit);
-
-	Wout << L"Fullscreen mode: "; PrintBool(Fullscreen);
-	Wout << L"Show FPS: "; PrintBool(ShowFPS);
-	Wout << L"============================================================" << Endl;
-	Wout << L"Playing music: "; PrintBool(Music);
-	Wout << L"Playing sounds: "; PrintBool(Sounds);
-	Wout << L"Local: " << Local.AsWstring() << Endl;
-	Wout << L"Texturepack name: " << Texturepack.AsWstring() << Endl;
-	Wout << L"Font: " << Font.AsWstring() << Endl;
-	Wout << L"Pixel font: " << PixelFont.AsWstring() << Endl;
-}
 
