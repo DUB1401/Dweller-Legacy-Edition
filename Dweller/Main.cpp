@@ -2,16 +2,26 @@
 
 #include "TechSupport.h"
 #include "Source.h"
-#include "EvolvGen.h"
-#include "GUI.h"
+
+#include "GameComponents/MainMenu.h"
+#include "GameComponents/Credits.h"
+#include "GameComponents/Intro.h"
+
 
 int main(int argc, char* argv[]) {
-
 	SetConsoleCP(CP_UTF8);
 	SetConsoleOutputCP(CP_UTF8);
 
-	sf::RenderWindow MainWindow(sf::VideoMode(1920, 1080 + 1), "Dweller: Legacy Edition", sf::Style::None);
-	//sf::RenderWindow MainWindow(sf::VideoMode(1280, 720), "Dweller: Legacy Edition", sf::Style::Close);
+	//Чтение настроек.
+	Settings ObjectSettings(L"Settings.ini");
+	ObjectSettings.Print();
+	//Инициализация окна и фикс проблемы безрамочного окна.
+	sf::RenderWindow MainWindow;
+	if (ObjectSettings.Fullscreen) MainWindow.create(sf::VideoMode(ObjectSettings.WindowWidth, ObjectSettings.WindowHeight + 1), "Dweller: Legacy Edition", sf::Style::None);
+	else MainWindow.create(sf::VideoMode(ObjectSettings.WindowWidth, ObjectSettings.WindowHeight), "Dweller: Legacy Edition", sf::Style::Close);
+	//Установка настроек окна: вертикальная синхронизация и ограничение FPS.
+	MainWindow.setVerticalSyncEnabled(ObjectSettings.VerticalSync);
+	MainWindow.setFramerateLimit(ObjectSettings.FramerateLimit);
 
 	sf::Clock GlobalClock;
 	double GlobalTimeAsSeconds;
@@ -23,17 +33,20 @@ int main(int argc, char* argv[]) {
 	//Ответ от обновляемого слоя.
 	std::string UpdateAnswer;
 
-	MainWindow.setVerticalSyncEnabled(0);
-
 	//Установка значка в заголовке окна.
 	HICON hicon = LoadIcon(GetModuleHandleA(NULL), MAKEINTRESOURCEW(103));
 	SendMessageA(MainWindow.getSystemHandle(), WM_SETICON, ICON_BIG, (LPARAM)hicon);
 
 	//Создание необходимых объектов игры.
-	TechSupport ObjTechSupport(&MainWindow, &GlobalTimeAsSeconds);
-	Intro ObjectIntro(&MainWindow, &GlobalTimeAsSeconds, &GlobalTimeAsMicroseconds);
-	MainMenu ObjectMainMenu(&MainWindow);
-	Credits ObjectCredits(&MainWindow, &GlobalTimeAsSeconds);
+	TechSupport* ObjTechSupport = new TechSupport(&MainWindow, &GlobalTimeAsSeconds);
+	Intro* ObjectIntro = new Intro(&MainWindow, &ObjectSettings, &GlobalTimeAsSeconds, &GlobalTimeAsMicroseconds);
+	MainMenu* ObjectMainMenu = new MainMenu(&MainWindow, &ObjectSettings);
+	Credits* ObjectCredits;// = new Credits(&MainWindow, &GlobalTimeAsSeconds);
+
+	//delete ObjTechSupport;
+	//delete ObjectIntro;
+	//delete ObjectMainMenu;
+	//delete ObjectCredits;
 
 	//ObjectIntro.Start();
 
@@ -55,28 +68,32 @@ int main(int argc, char* argv[]) {
 
 		//Вступительный ролик.
 		case 0:
-			//UpdateAnswer = ObjectIntro.Update();
+			//UpdateAnswer = ObjectIntro->Update();
 			break;
 
 		//Главное меню.
 		case 1:
-			UpdateAnswer = ObjectMainMenu.Update();
+			UpdateAnswer = ObjectMainMenu->Update();
 			break;
 
 		//Титры.
 		case 2:
-			UpdateAnswer = ObjectCredits.Update();
+			//UpdateAnswer = ObjectCredits->Update();
 			break;
 		}
 
 		//Выход в меню.
 		if (UpdateAnswer == "to_menu") { MenuUpdateIndex = 1; UpdateAnswer.clear(); }
 		//Переход к титрам.
-		if (UpdateAnswer == "to_credits") { MenuUpdateIndex = 2; UpdateAnswer.clear(); }
+		if (UpdateAnswer == "to_credits") { 
+			MenuUpdateIndex = 2; 
+			UpdateAnswer.clear();
+
+		}
 		//Выход из игры.
 		if (UpdateAnswer == "exit") return EXIT_SUCCESS;
 
-		ObjTechSupport.Update();
+		ObjTechSupport->Update();
 		MainWindow.display();
 	}
 

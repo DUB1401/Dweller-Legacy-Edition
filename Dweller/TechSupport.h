@@ -1,11 +1,22 @@
 #pragma once
 
+#pragma comment (lib, "dxgi.lib")
+
 #include <SFML/Graphics.hpp>
 
 #include <iostream>
 #include <Windows.h>
 
+#include <dxgi.h>
+#include <comdef.h>
+#include <ShlObj_core.h>
+
+#include <intrin.h>
+#include <bitset>
+#include <array>
+
 //Технические инструменты.
+//TO-DO: лог, рефакторинг вендора процессора.
 class TechSupport {
 private:
 
@@ -30,9 +41,16 @@ private:
 	//---> Логические переключатели и настройки.
 	//=======================================================================================================================//
 	//Отображать ли FPS.
-	bool IsShowFPS = TRUE;
+	bool IsShowFPS = true;
 	//Перечисление индексов доступа к строкам технических данных.
 	enum { tsFPS = 0 };
+
+protected:
+	
+	//---> Получение данных.
+	//=======================================================================================================================//
+	//Получает список установленных видеокарт.
+	std::vector<std::string> GetGPU();
 
 public:
 
@@ -48,3 +66,4 @@ public:
 	//Выполнение цикла обновления класса.
 	void Update();
 };
+

@@ -5,7 +5,7 @@
 //Преобразование и анализ типов данных.
 namespace DUBLIB {
 
-	//Преобразование целочисленного значения в строковое (ASCII).
+	//Преобразование целочисленного значения в строковое.
 	std::string ConvertNumberToString(int Value) {
 		std::stringstream Out;
 		Out << Value;
@@ -14,10 +14,30 @@ namespace DUBLIB {
 
 	//Преобразовывает std::string в std::wstring.
 	std::wstring ToWstring(std::string Str) {
-		std::wstring to_wstring(Str.begin(), Str.end());
-		return to_wstring;
+		std::vector<wchar_t> buf(Str.size());
+		std::use_facet<std::ctype<wchar_t>>(std::locale()).widen(Str.data(),
+			Str.data() + Str.size(),
+			buf.data());
+		return std::wstring(buf.data(), buf.size());
 	}
 
+	//Преобразовывает std::wstring в std::string.
+	std::string ToString(std::wstring Str, Encodings FromEncoding) {
+		std::string Result;
+		//Преобразование из UTF-8.
+		if (FromEncoding == Encodings::UTF8) {
+			std::vector<char> Bufer(Str.size());
+			std::use_facet<std::ctype<wchar_t>>(std::locale()).narrow(Str.data(), Str.data() + Str.size(), '?', Bufer.data());
+			Result = std::string(Bufer.data(), Bufer.size());
+		}
+		//Преобразование из ASCII.
+		if (FromEncoding == Encodings::ANSI) {
+			int sz = WideCharToMultiByte(CP_ACP, 0, &Str[0], (int)Str.size(), 0, 0, 0, 0);
+			Result = std::string(sz, 0);
+			WideCharToMultiByte(CP_ACP, 0, &Str[0], (int)Str.size(), &Result[0], sz, 0, 0);
+		}
+		return Result;
+	}
 }
 
 //Работа со строками.
@@ -29,7 +49,7 @@ namespace DUBLIB {
 		return Str;
 	}
 
-	//Удаляет указанное число символов с начала строки (Unicode).
+	//Удаляет указанное число символов с начала строки (UTF-16).
 	std::wstring DeleteFirstCharacters(std::wstring Str, unsigned int Amount) {
 		Str.erase(0, Amount);
 		return Str;
@@ -41,7 +61,7 @@ namespace DUBLIB {
 		return Str;
 	}
 
-	//Удаляет указанное число символов с конца строки (Unicode).
+	//Удаляет указанное число символов с конца строки (UTF-16).
 	std::wstring DeleteLastCharacters(std::wstring Str, unsigned int Amount) {
 		for (unsigned int i = 0; i < Amount; i++) if (Str.length() != 0) Str.pop_back();
 		return Str;
@@ -60,7 +80,7 @@ namespace DUBLIB {
 		return Str;
 	}
 
-	//Удаляет пробелы и символы табуляции из начала и конца строки (Unicode).
+	//Удаляет пробелы и символы табуляции из начала и конца строки (UTF-16).
 	std::wstring Trim(std::wstring Str) {
 		bool Stop = false;
 		while (Str.length() > 0 && !Stop) {
@@ -80,7 +100,7 @@ namespace DUBLIB {
 		return Str;
 	}
 
-	//Обрезает строку до указанной длины (Unicode). 
+	//Обрезает строку до указанной длины (UTF-16). 
 	std::wstring CutToLength(std::wstring Str, unsigned int Length) {
 		std::wstring Bufer;
 		for (unsigned int i = 0; i < Str.length(); i++) if (i != Length) Bufer.push_back(Str[i]); else return Bufer;
@@ -95,7 +115,7 @@ namespace DUBLIB {
 
 	}
 
-	//Проверяет посимвольно соответствие первой строки второй строке. Если первая строка длиннее второй, то усекает её до одинаковой длины (Unicode).
+	//Проверяет посимвольно соответствие первой строки второй строке. Если первая строка длиннее второй, то усекает её до одинаковой длины (UTF-16).
 	bool CheckForSimilarity(std::wstring FirstStr, std::wstring SecondStr) {
 		if ((unsigned int)FirstStr.length() > (unsigned int)SecondStr.length()) CutToLength(FirstStr, (unsigned int)SecondStr.length());
 		for (unsigned int i = 0; i < (unsigned int)FirstStr.length(); i++) if (SecondStr[i] != FirstStr[i]) return false;
@@ -158,6 +178,37 @@ namespace DUBLIB {
 			}
 		}
 		return Answer;
+	}
+
+	//Возвращает целочисленное значение первого найденного маркера в файле (ASCII).
+	int GetMarkeredIntFromFile(std::string File, std::string Marker) {
+		std::ifstream Read;
+		Read.open(File);
+		std::string Answer = "";
+
+		std::string Bufer;
+		while (getline(Read, Bufer)) {
+			if (DUBLIB::CheckForSimilarity(Marker + ":", Bufer)) {
+				Answer = DUBLIB::Trim(DUBLIB::DeleteFirstCharacters(Bufer, (unsigned int)Marker.length() + 1));
+				Read.close();
+			}
+		}
+		return atoi(Answer.c_str());
+	}
+
+	//Возвращает целочисленное значение первого найденного маркера в файле (UTF-16).
+	int GetMarkeredIntFromFile(std::wstring File, std::wstring Marker) {
+		std::wifstream Read;
+		Read.open(File);
+		std::wstring Answer = L"";
+		std::wstring Bufer;
+		while (getline(Read, Bufer)) {
+			if (DUBLIB::CheckForSimilarity(Marker + L":", Bufer)) {
+				Answer = DUBLIB::Trim(DUBLIB::DeleteFirstCharacters(Bufer, (unsigned int)Marker.length() + 1));
+				Read.close();
+			}
+		}
+		return _wtoi(Answer.c_str());
 	}
 
 	//Возвращает значение первого найденного маркера в файле и форматирует его в bool (ASCII).
@@ -272,6 +323,17 @@ namespace DUBLIB {
 	//Выводит в консоль содержимое вектора (unsigned int).
 	void PrintVector(std::vector<unsigned int> Value) {
 		for (unsigned int i = 0; i < Value.size(); i++) Cout << "Element " << i << " : \"" << Value[i] << "\"\n";
+	}
+
+}
+
+//Методы работы с Windows.
+namespace DUBLIB {
+
+	//Задаёт цвет текста консоли.
+	void SetWindowsConsoleColor(CMD_Colors TextColor) {
+		HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+		SetConsoleTextAttribute(hStdOut, (WORD)((0 << 4) | static_cast<unsigned>(TextColor)));
 	}
 
 }

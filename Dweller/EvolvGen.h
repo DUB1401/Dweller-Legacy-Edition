@@ -8,10 +8,22 @@
 #include <vector>
 #include <windows.h>
 
+#include "SFML/System.hpp"
+
 #define Cout std::cout
 #define Wout std::wcout
 #define Cin std::cin
 #define Endl std::endl
+
+//Перечисления и дополнительные данные.
+namespace DUBLIB {
+
+	//Стандартные цвета, доступные для установки в консоль Windows.
+	enum class CMD_Colors { clBlack = 0, clBlue, clGreen, clCyan, clRed, clMagenta, clBrown, clLightGray, clDarkGrey, clLightBlue, clLightGreen, clLightCyan, clLightRed, clLightMagenta, clYellow, clWhite };
+
+	//Типы строковых кодировок.
+	enum class Encodings { ANSI = 0, UTF8, UTF16, UTF32 };
+}
 
 //Преобразование и анализ типов данных.
 namespace DUBLIB {
@@ -21,6 +33,10 @@ namespace DUBLIB {
 
 	//Преобразовывает std::string в std::wstring.
 	std::wstring ToWstring(std::string Str);
+
+	//Преобразовывает std::wstring в std::string.
+	std::string ToString(std::wstring Str, Encodings FromEncoding);
+
 
 }
 
@@ -79,19 +95,25 @@ namespace DUBLIB {
 	//Возвращает значение первого найденного маркера в файле (ASCII).
 	std::string GetMarkeredStringFromFile(std::string File, std::string Marker);
 
-	//Возвращает значение первого найденного маркера в файле (Unicode).
+	//Возвращает значение первого найденного маркера в файле (UTF-16).
 	std::wstring GetMarkeredStringFromFile(std::wstring File, std::wstring Marker);
+
+	//Возвращает целочисленное значение первого найденного маркера в файле (ASCII).
+	int GetMarkeredIntFromFile(std::string File, std::string Marker);
+
+	//Возвращает целочисленное значение первого найденного маркера в файле (UTF-16).
+	int GetMarkeredIntFromFile(std::wstring File, std::wstring Marker);
 
 	//Возвращает значение первого найденного маркера в файле и форматирует его в bool (ASCII).
 	bool GetMarkeredBoolFromFile(std::string File, std::string Marker);
 
-	//Возвращает значение первого найденного маркера в файле и форматирует его в bool (Unicode).
+	//Возвращает значение первого найденного маркера в файле и форматирует его в bool (UTF-16).
 	bool GetMarkeredBoolFromFile(std::wstring File, std::wstring Marker);
 
 	//Возвращает вектор строк с соответствующим маркером (ASCII).
 	std::vector<std::string> GetMarkeredStringsArrayFromFile(std::string File, std::string Marker);
 
-	//Возвращает вектор строк с соответствующим маркером (Unicode).
+	//Возвращает вектор строк с соответствующим маркером (UTF-16).
 	std::vector<std::wstring> GetMarkeredStringsArrayFromFile(std::wstring File, std::wstring Marker);
 
 }
@@ -107,5 +129,13 @@ namespace DUBLIB {
 
 	//Выводит в консоль содержимое вектора (unsigned int).
 	void PrintVector(std::vector<unsigned int> Value);
+
+}
+
+//Методы работы с Windows.
+namespace DUBLIB {
+
+	//Задаёт цвет текста консоли.
+	void SetWindowsConsoleColor(CMD_Colors TextColor);
 
 }
