@@ -23,17 +23,27 @@ void LayoutsController::Processing() {
 		//Титры.
 		Answer = ObjectCredits->Update();
 		break;
+	case 4:
+		//Игра.
+		Answer = ObjectWorldRenderer->Update();
+		break;
 	}
 }
 
 //Выделить память.
 void LayoutsController::AllocateMemory() {
 	//Выделение памяти: вступительный ролик.
-	if (Answer.to == "intro") ObjectIntro = new Intro(MainWindow, ObjectSettings, GlobalTimeAsSeconds, GlobalTimeAsMicroseconds);
+	if (Answer.to == "intro") { 
+		ObjectIntro = new Intro(MainWindow, ObjectSettings, GlobalTimeAsSeconds, GlobalTimeAsMicroseconds);
+		ObjectIntro->Start();
+	
+	}
 	//Выделение памяти: главное меню.
 	if (Answer.to == "menu") ObjectMainMenu = new MainMenu(MainWindow, ObjectSettings);
 	//Выделение памяти: титры.
 	if (Answer.to == "credits") ObjectCredits = new Credits(MainWindow, ObjectSettings, GlobalTimeAsSeconds);
+	//Выделение памяти: игра.
+	if (Answer.to == "game") ObjectWorldRenderer = new WorldRenderer(MainWindow, ObjectSettings, GlobalTimeAsSeconds);
 }
 
 //Освободить память.
@@ -53,12 +63,15 @@ void LayoutsController::SetNewUpdateIndex() {
 }
 
 //Конструктор: инициалзиация объекта.
-LayoutsController::LayoutsController(sf::RenderWindow* MainWindow, Settings* ObjectSettings) {
+LayoutsController::LayoutsController(sf::RenderWindow* MainWindow, Settings* ObjectSettings, double* GlobalTimeAsSeconds, double* GlobalTimeAsMiliseconds, unsigned long long int* GlobalTimeAsMicroseconds) {
 
 	//---> Передача аргументов.
 	//=======================================================================================================================//
 	this->ObjectSettings = ObjectSettings;
 	this->MainWindow = MainWindow;
+	this->GlobalTimeAsSeconds = GlobalTimeAsSeconds;
+	this->GlobalTimeAsMiliseconds = GlobalTimeAsMiliseconds;
+	this->GlobalTimeAsMicroseconds = GlobalTimeAsMicroseconds;
 
 	//---> Инициализация контейнера определений слоёв.
 	//=======================================================================================================================//
@@ -66,20 +79,14 @@ LayoutsController::LayoutsController(sf::RenderWindow* MainWindow, Settings* Obj
 	LayoutsDefinitions["intro"] = 1;
 	LayoutsDefinitions["menu"] = 2;
 	LayoutsDefinitions["credits"] = 3;
+	LayoutsDefinitions["game"] = 4;
 
 	//---> Инициализация стартового слоя.
 	//=======================================================================================================================//
-	Answer.to = "menu";
+	Answer.to = "intro";
 	SetNewUpdateIndex();
 	AllocateMemory();
 	Answer.Clear();
-}
-
-//Устанавливает указатели на время кадра.
-void LayoutsController::SetElapsedTimeContainers(double* GlobalTimeAsSeconds, double* GlobalTimeAsMiliseconds, unsigned long long int* GlobalTimeAsMicroseconds) {
-	this->GlobalTimeAsSeconds = GlobalTimeAsSeconds;
-	this->GlobalTimeAsMiliseconds = GlobalTimeAsMiliseconds;
-	this->GlobalTimeAsMicroseconds = GlobalTimeAsMicroseconds;
 }
 
 //Обновление текущего слоя и его ответа.

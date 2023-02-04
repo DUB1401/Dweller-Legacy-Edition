@@ -72,6 +72,9 @@
     <ClCompile Include="Source\Data.cpp">
       <Filter>Исходные файлы\Source</Filter>
     </ClCompile>
+    <ClCompile Include="GameComponents\WorldRenderer.cpp">
+      <Filter>Исходные файлы\GameComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EvolvGen.h">
@@ -112,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="TechSupport.h">
       <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="GameComponents\WorldRenderer.h">
+      <Filter>Файлы заголовков\GameComponents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

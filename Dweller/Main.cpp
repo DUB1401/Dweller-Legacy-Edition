@@ -2,6 +2,7 @@
 
 #include "TechSupport.h"
 #include "Source.h"
+#include "GameComponents/Intro.h"
 
 int main(int argc, char* argv[]) {
 	SetConsoleCP(CP_UTF8);
@@ -17,6 +18,7 @@ int main(int argc, char* argv[]) {
 	//Установка настроек окна: вертикальная синхронизация и ограничение FPS.
 	MainWindow.setVerticalSyncEnabled(ObjectSettings.VerticalSync);
 	MainWindow.setFramerateLimit(ObjectSettings.FramerateLimit);
+	
 
 	sf::Clock GlobalClock;
 	double GlobalTimeAsSeconds;
@@ -29,14 +31,13 @@ int main(int argc, char* argv[]) {
 
 	//Создание необходимых объектов игры.
 	TechSupport* ObjTechSupport = new TechSupport(&MainWindow, &GlobalTimeAsSeconds);
-	LayoutsController ObjectLayoutsController(&MainWindow, &ObjectSettings);
-	ObjectLayoutsController.SetElapsedTimeContainers(&GlobalTimeAsSeconds, &GlobalTimeAsMilliseconds, &GlobalTimeAsMicroseconds);
+	LayoutsController ObjLayoutsController(&MainWindow, &ObjectSettings, &GlobalTimeAsSeconds, &GlobalTimeAsMilliseconds, &GlobalTimeAsMicroseconds);
 
 	while (MainWindow.isOpen()) {
 
 		sf::Event MainEvent;
 		while (MainWindow.pollEvent(MainEvent)) if (MainEvent.type == sf::Event::Closed) MainWindow.close();
-		//else if (MainEvent.type == sf::Event::MouseWheelMoved) std::cout << MainEvent.mouseWheel.delta << '\n';
+		else if (MainEvent.type == sf::Event::MouseWheelMoved) std::cout << MainEvent.mouseWheel.delta << '\n';
 
 		GlobalTimeAsSeconds = GlobalClock.getElapsedTime().asSeconds();
 		GlobalTimeAsMilliseconds = GlobalClock.getElapsedTime().asMilliseconds();
@@ -44,7 +45,7 @@ int main(int argc, char* argv[]) {
 		GlobalClock.restart();
 
 		MainWindow.clear();
-		ObjectLayoutsController.Update();
+		ObjLayoutsController.Update();
 		ObjTechSupport->Update();
 		MainWindow.display();
 		

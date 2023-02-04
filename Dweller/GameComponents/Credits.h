@@ -10,8 +10,8 @@
 #include "../Source/Settings.h"
 #include "../Source/Data.h"
 
-//Титры.
-//TO-DO: скроллинг титров.
+// Титры.
+// TO-DO: скроллинг титров.
 class Credits {
 private:
 

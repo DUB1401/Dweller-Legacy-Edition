@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GameComponents/WorldRenderer.h"
 #include "GameComponents/MainMenu.h"
 #include "GameComponents/Credits.h"
 #include "GameComponents/Intro.h"
@@ -16,6 +17,8 @@ private:
 	MainMenu* ObjectMainMenu;
 	//Титры.
 	Credits* ObjectCredits;
+	//Отрисовщик мира.
+	WorldRenderer* ObjectWorldRenderer;
 
 	//---> Данные.
 	//=======================================================================================================================//
@@ -50,10 +53,7 @@ private:
 public:
 
 	//Конструктор: инициалзиация объекта.
-	LayoutsController(sf::RenderWindow* MainWindow, Settings* ObjectSettings);
-
-	//Устанавливает указатели на время кадра.
-	void SetElapsedTimeContainers(double* GlobalTimeAsSeconds, double* GlobalTimeAsMiliseconds, unsigned long long int* GlobalTimeAsMicroseconds);
+	LayoutsController(sf::RenderWindow* MainWindow, Settings* ObjectSettings, double* GlobalTimeAsSeconds, double* GlobalTimeAsMiliseconds, unsigned long long int* GlobalTimeAsMicroseconds);
 
 	//Обновление текущего слоя и его ответа.
 	void Update();

@@ -17,9 +17,8 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <list>
 #include <map>
-
-
 
 //Перечисления и типы данных.
 namespace DUBLIB {

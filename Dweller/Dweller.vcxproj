@@ -139,6 +139,7 @@
     <ClCompile Include="GameComponents\Credits.cpp" />
     <ClCompile Include="GameComponents\Intro.cpp" />
     <ClCompile Include="GameComponents\MainMenu.cpp" />
+    <ClCompile Include="GameComponents\WorldRenderer.cpp" />
     <ClCompile Include="GUI\CenteredLabel.cpp" />
     <ClCompile Include="GUI\KeystrokesProcessing.cpp" />
     <ClCompile Include="GUI\TextBox.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="GameComponents\Credits.h" />
     <ClInclude Include="GameComponents\Intro.h" />
     <ClInclude Include="GameComponents\MainMenu.h" />
+    <ClInclude Include="GameComponents\WorldRenderer.h" />
     <ClInclude Include="GUI\CenteredLabel.h" />
     <ClInclude Include="GUI\KeystrokesProcessing.h" />
     <ClInclude Include="GUI\TextBox.h" />

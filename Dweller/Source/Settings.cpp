@@ -3,7 +3,7 @@
 //---> Settings
 //=======================================================================================================================//
 
-//Выводит в консоль bool красного или зелёного цвета соответственно логике и переводит вывод на новую строку.
+//Р’С‹РІРѕРґРёС‚ РІ РєРѕРЅСЃРѕР»СЊ bool РєСЂР°СЃРЅРѕРіРѕ РёР»Рё Р·РµР»С‘РЅРѕРіРѕ С†РІРµС‚Р° СЃРѕРѕС‚РІРµС‚СЃС‚РІРµРЅРЅРѕ Р»РѕРіРёРєРµ Рё РїРµСЂРµРІРѕРґРёС‚ РІС‹РІРѕРґ РЅР° РЅРѕРІСѓСЋ СЃС‚СЂРѕРєСѓ.
 void Settings::PrintBool(bool Value) {
 	if (Value) {
 		DUBLIB::SetWindowsConsoleColor(DUBLIB::CMD_Colors::clLightGreen);
@@ -17,31 +17,31 @@ void Settings::PrintBool(bool Value) {
 	}
 }
 
-//Выводит в консоль int голубого цвета.
+//Р’С‹РІРѕРґРёС‚ РІ РєРѕРЅСЃРѕР»СЊ int РіРѕР»СѓР±РѕРіРѕ С†РІРµС‚Р°.
 void Settings::PrintInt(int Value) {
 	DUBLIB::SetWindowsConsoleColor(DUBLIB::CMD_Colors::clCyan);
 	Wout << Value;
 	DUBLIB::SetWindowsConsoleColor(DUBLIB::CMD_Colors::clLightGray);
 }
 
-//Переход на новую строку.
+//РџРµСЂРµС…РѕРґ РЅР° РЅРѕРІСѓСЋ СЃС‚СЂРѕРєСѓ.
 void Settings::Empl() {
 	Wout << Endl;
 }
 
-//Конструктор: загрузка из файла настроек.
+//РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ: Р·Р°РіСЂСѓР·РєР° РёР· С„Р°Р№Р»Р° РЅР°СЃС‚СЂРѕРµРє.
 Settings::Settings(std::wstring Path) {
 	LoadFromFile(Path);
 }
 
-//Загрузка из файла настроек.
+//Р—Р°РіСЂСѓР·РєР° РёР· С„Р°Р№Р»Р° РЅР°СЃС‚СЂРѕРµРє.
 void Settings::LoadFromFile(std::wstring Path) {
-	//---> Версии и объявления.
+	//---> Р’РµСЂСЃРёРё Рё РѕР±СЉСЏРІР»РµРЅРёСЏ.
 	//=======================================================================================================================//
 	Version = DUBLIB::GetMarkeredStringFromFile(Path, L"version");
 	Sfml = DUBLIB::GetMarkeredStringFromFile(Path, L"sfml");
 
-	//---> Настройки видеовывода.
+	//---> РќР°СЃС‚СЂРѕР№РєРё РІРёРґРµРѕРІС‹РІРѕРґР°.
 	//=======================================================================================================================//
 	WindowWidth = DUBLIB::GetMarkeredIntFromFile(Path, L"window-width");
 	WindowHeight = DUBLIB::GetMarkeredIntFromFile(Path, L"window-height");
@@ -50,7 +50,7 @@ void Settings::LoadFromFile(std::wstring Path) {
 	Fullscreen = DUBLIB::GetMarkeredBoolFromFile(Path, L"window-fullscreen");
 	ShowFPS = DUBLIB::GetMarkeredBoolFromFile(Path, L"window-showFPS");
 
-	//---> Настройки окружения игры.
+	//---> РќР°СЃС‚СЂРѕР№РєРё РѕРєСЂСѓР¶РµРЅРёСЏ РёРіСЂС‹.
 	//=======================================================================================================================//
 	Music = DUBLIB::GetMarkeredBoolFromFile(Path, L"game-music");
 	Sounds = DUBLIB::GetMarkeredBoolFromFile(Path, L"game-sounds");
@@ -60,7 +60,7 @@ void Settings::LoadFromFile(std::wstring Path) {
 	PixelFont = DUBLIB::GetMarkeredStringFromFile(Path, L"game-font-pixel");
 }
 
-//Выводит в консоль все настройки.
+//Р’С‹РІРѕРґРёС‚ РІ РєРѕРЅСЃРѕР»СЊ РІСЃРµ РЅР°СЃС‚СЂРѕР№РєРё.
 void Settings::Print() {
 	Cout << "Game version: " << Version.AsString() << Endl;
 	Wout << L"SFML: " << Sfml.AsWstring() << Endl;
