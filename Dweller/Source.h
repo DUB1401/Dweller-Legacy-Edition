@@ -4,6 +4,7 @@
 #include "GameComponents/MainMenu.h"
 #include "GameComponents/Credits.h"
 #include "GameComponents/Intro.h"
+#include "Source/Data.h"
 
 //Переключатель слоёв отрисовки и обработчик выделения памяти.
 class LayoutsController {
@@ -32,6 +33,8 @@ private:
 	LayoutAnswer Answer;
 	//Окно отрисовки.
 	sf::RenderWindow* MainWindow;
+	//Структура коммуникаций с модулями.
+	CommunicationData* ComData;
 	//Время кадра в секундах.
 	double* GlobalTimeAsSeconds;
 	//Время кадра в миллисекундах.
@@ -53,7 +56,7 @@ private:
 public:
 
 	//Конструктор: инициалзиация объекта.
-	LayoutsController(sf::RenderWindow* MainWindow, Settings* ObjectSettings, double* GlobalTimeAsSeconds, double* GlobalTimeAsMiliseconds, unsigned long long int* GlobalTimeAsMicroseconds);
+	LayoutsController(sf::RenderWindow* MainWindow, CommunicationData* ComData, Settings* ObjectSettings, double* GlobalTimeAsSeconds, double* GlobalTimeAsMiliseconds, unsigned long long int* GlobalTimeAsMicroseconds);
 
 	//Обновление текущего слоя и его ответа.
 	void Update();

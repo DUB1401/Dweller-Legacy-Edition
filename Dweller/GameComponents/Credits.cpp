@@ -10,23 +10,26 @@ void Credits::Close(std::string To, std::string From) {
 }
 
 //Конструктор: задаёт окно отрисовки технических данных.
-Credits::Credits(sf::RenderWindow* MainWindow, Settings* ObjectSettings, double* GlobalTimeAsSeconds) {
+Credits::Credits(sf::RenderWindow* MainWindow, CommunicationData* ComData, Settings* ObjectSettings, double* GlobalTimeAsSeconds) {
 
 	//---> Передача аргументов.
 	//=======================================================================================================================//
 	this->MainWindow = MainWindow;
+	this->ComData = ComData;
 	this->ObjectSettings = ObjectSettings;
 	this->GlobalTimeAsSeconds = GlobalTimeAsSeconds;
 
 	//---> Загрузка титров и настройка текстовой области.
 	//=======================================================================================================================//
 	TextFont.loadFromFile("Data\\Fonts\\" + ObjectSettings->Font.AsString());
-	TextBoxObject.SetCharacterSize(18);
-	TextBoxObject.SetFont(&TextFont);
-	TextBoxObject.SetPosition(28, 28 + 96);
-	TextBoxObject.SetOutline(sf::Color::Black, 0.5);
-	TextBoxObject.SetStringsArray(DUBLIB::GetMarkeredStringsArrayFromFile(L"Data\\Local\\" + ObjectSettings->Local.AsWstring() + L".txt", L"credits"));
-	TextBoxObject.Initialize(MainWindow, sf::Vector2u(MainWindow->getSize().x - 56, MainWindow->getSize().y));
+	TextBoxObject.setCharacterSize(18);
+	TextBoxObject.setDisplayedStringsCount(14);
+	TextBoxObject.setParagraphSpacing(1.0);
+	TextBoxObject.setFont(&TextFont);
+	TextBoxObject.setPosition(28, 28 + 96);
+	TextBoxObject.setOutline(sf::Color::Black, 0.5);
+	TextBoxObject.setParagraphsArray(DUBLIB::GetMarkeredStringsArrayFromFile(L"Data\\Local\\" + ObjectSettings->Local.AsWstring() + L".txt", L"credits"));
+	TextBoxObject.initialize(ComData->MainWindow, sf::Vector2u(MainWindow->getSize().x - 56, MainWindow->getSize().y));
 
 	//---> Загрузка текстур.
 	//=======================================================================================================================//
@@ -60,45 +63,48 @@ Credits::Credits(sf::RenderWindow* MainWindow, Settings* ObjectSettings, double*
 
 	KP_Escape.SetKey(sf::Keyboard::Escape);
 
-
 }
 
-//Выполнение цикла обновления класса.
+// Выполнение цикла обновления класса.
 LayoutAnswer Credits::Update() {
-	//Заливка цветом.
+	// Заливка цветом.
 	MainWindow->clear(sf::Color(158, 120, 119));
-
+	// Отрисовка фоновой эмблемы.
 	MainWindow->draw(EmblemSprite);
-	TextBoxObject.Update();
-	//Отрисовка заголовка.
+	// Отрисовка текста.
+	TextBoxObject.update();
+	TextBoxObject.scroll(*ComData->MouseWheelScrollDelta);
+	// Отрисовка фона заголовка.
 	MainWindow->draw(HeaderSprite);
+	// Отрисовка заголовка.
 	CenteredLabelObject.Update();
 
-	//Отрисовка верхней рамки. Сдвиг на 12px для симметрии.
+	// Отрисовка верхней рамки. Сдвиг на 12px для симметрии.
 	BorderSprite.setTextureRect(sf::IntRect(0, 0, 48, 28));
 	for (unsigned int i = 0; i < BorderAmountX; i++) {
 		BorderSprite.setPosition(48 * i + 28 - 12, 96);
 		MainWindow->draw(BorderSprite);
 	}
-	//Отрисовка левой рамки.
+	// Отрисовка левой рамки.
 	BorderSprite.setTextureRect(sf::IntRect(0, 28, 28, 48));
 	for (unsigned int i = 0; i < BorderAmountY; i++) {
 		BorderSprite.setPosition(0, 48 * i + 28 + 96);
 		MainWindow->draw(BorderSprite);
 	}
-	//Отрисовка правой рамки.
+	// Отрисовка правой рамки.
 	BorderSprite.setTextureRect(sf::IntRect(28, 28, 28, 48));
 	for (unsigned int i = 0; i < BorderAmountY; i++) {
 		BorderSprite.setPosition(MainWindow->getSize().x - 28, 48 * i + 28 + 96);
 		MainWindow->draw(BorderSprite);
 	}
-	//Отрисовка нижней рамки. Сдвиг на 12px для симметрии.
+	// Отрисовка нижней рамки. Сдвиг на 12px для симметрии.
 	BorderSprite.setTextureRect(sf::IntRect(48, 0, 48, 28));
 	for (unsigned int i = 0; i < BorderAmountX; i++) {
 		BorderSprite.setPosition(48 * i + 28 - 12, MainWindow->getSize().y - 28);
 		MainWindow->draw(BorderSprite);
 	}
-	//Отрисовка уголков.
+
+	// Отрисовка уголков.
 	BorderSprite.setTextureRect(sf::IntRect(56, 28, 28, 28));
 	BorderSprite.setPosition(0, 96);
 	MainWindow->draw(BorderSprite);
@@ -109,10 +115,10 @@ LayoutAnswer Credits::Update() {
 	BorderSprite.setPosition(0, MainWindow->getSize().y - 28);
 	MainWindow->draw(BorderSprite);
 
-	//Если титры были закрыты, но обновляются снова, то отменить передачу ответа.
+	// Если титры были закрыты, но обновляются снова, то отменить передачу ответа.
 	if (Answer.Empty()) Answer.Clear();
 
-	//Отправка ответа для обработчика меню.
+	// Отправка ответа для обработчика меню.
 	if (BT_Close.Update() == Button::Clicked || KP_Escape.Update()) Close("menu", "credits");
 
 	return Answer;
