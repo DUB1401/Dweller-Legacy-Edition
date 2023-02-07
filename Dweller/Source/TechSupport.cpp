@@ -33,7 +33,7 @@ std::string GetCpuVendorString() {
 	return VendorString;
 }
 
-//Получает список установленных видеокарт.
+// Получает список установленных видеокарт.
 std::vector<std::string> TechSupport::GetGPU() {
 	IDXGIFactory1* pFactory;
 	HRESULT hr = CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)(&pFactory));
@@ -51,62 +51,62 @@ std::vector<std::string> TechSupport::GetGPU() {
 	return AllCards;
 }
 
-//Конструктор: задаёт окно отрисовки технических данных и счётчик времени.
+// Конструктор: задаёт окно отрисовки технических данных и счётчик времени.
 TechSupport::TechSupport(sf::RenderWindow* MainWindow, double* GlobalTimeAsSeconds) {
 
 	//---> Передача аргументов.
-	//=======================================================================================================================//
+	//========================================================================================================================//
 	this->MainWindow = MainWindow;
 	this->GlobalTimeAsSeconds = GlobalTimeAsSeconds;
 
 	//---> Создание надписей для отображения технических данных.
-	//=======================================================================================================================//
-	//Настройка шаблона генерации надписей.
+	//========================================================================================================================//
+	// Настройка шаблона генерации надписей.
 	sf::Text* TemplateLabel = new sf::Text;
 	TemplateLabel->setFillColor(sf::Color::Green);
 	TemplateLabel->setCharacterSize(12);
-	//Загрузка шрифта.
+	// Загрузка шрифта.
 	sf::Font* TemplateFont = new sf::Font;
 	TemplateFont->loadFromFile("Data\\Fonts\\Arialuni.ttf");
-	//Генерация надписей в цикле.
+	// Генерация надписей в цикле.
 	for (unsigned int i = 0; i < 2; i++) {
 		TechLabels.push_back(*TemplateLabel);
 		TechLabels[i].setFont(*TemplateFont);
 	}
-	//Очистка переменных.
+	// Очистка переменных.
 	delete TemplateLabel, TemplateFont;
 }
 
-//Переключить отображение FPS.
+// Переключить отображение FPS.
 void TechSupport::SwitchShowingFPS(bool IsShowFPS) {
 	this->IsShowFPS = IsShowFPS;
 }
 
-//Возвращает статус отображения FPS.
+// Возвращает статус отображения FPS.
 bool TechSupport::IsShowingFPS() {
 	return this->IsShowFPS;
 }
 
-//Выполнение цикла обновления класса.
+// Выполнение цикла обновления класса.
 void TechSupport::Update() {
-	//Обновление счётчика FPS.
+	// Обновление счётчика FPS.
 	if (IsShowFPS) {
 		LastFrameTime += *GlobalTimeAsSeconds;
 		CurrentFPS++;
 
-		//Если прошла секунда.
+		// Если прошла секунда.
 		if (LastFrameTime >= 1.0) {
-			//Уменьшение прошедшего времени на секунду.
+			// Уменьшение прошедшего времени на секунду.
 			LastFrameTime--;
-			//Сохранение текущего FPS.
+			// Сохранение текущего FPS.
 			LastSecondFPS = CurrentFPS;
-			//Обнуление счётчика для следующего цикла.
+			// Обнуление счётчика для следующего цикла.
 			CurrentFPS = 0;
 
 			TechLabels[tsFPS].setString("FPS: " + DUBLIB::ConvertNumberToString(LastSecondFPS));
 		}
 	}
 
-	//Отрисовка технических надписей.
+	// Отрисовка технических надписей.
 	for (unsigned int i = 0; i < TechLabels.size(); i++) MainWindow->draw(TechLabels[0]);
 }

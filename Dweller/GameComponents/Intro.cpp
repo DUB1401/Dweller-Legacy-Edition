@@ -1,15 +1,15 @@
 #include "Intro.h"
 
 //---> Intro
-//=======================================================================================================================//
+//========================================================================================================================//
 
-//Установка анимации проявления.
+// Установка анимации проявления.
 void Intro::InitializeAppearancesAnimation() {
 	TransparencyCoefficient = 255;
 	StartAppearancesAnimation = true;
 }
 
-//Воспроизведение анимации проявления.
+// Воспроизведение анимации проявления.
 void Intro::PlayAppearancesAnimation() {
 	TransparencyCoefficient -= 0.2 * *GlobalTimeAsMicroseconds / 800;
 	if (TransparencyCoefficient < 0) {
@@ -20,13 +20,13 @@ void Intro::PlayAppearancesAnimation() {
 	MainWindow->draw(BlackRect);
 }
 
-//Установка анимации затухания.
+// Установка анимации затухания.
 void Intro::InitializeAttenuationAnimation() {
 	TransparencyCoefficient = 0;
 	StartAttenuationAnimation = true;
 }
 
-//Воспроизведение анимации затухания.
+// Воспроизведение анимации затухания.
 void Intro::PlayAttenuationAnimation() {
 	TransparencyCoefficient += 0.2 * *GlobalTimeAsMicroseconds / 800;
 	if (TransparencyCoefficient > 255) {
@@ -37,28 +37,28 @@ void Intro::PlayAttenuationAnimation() {
 	MainWindow->draw(BlackRect);
 }
 
-//Конструктор: запускает проигрывание вступительного ролика.
+// Конструктор: запускает проигрывание вступительного ролика.
 Intro::Intro(sf::RenderWindow* MainWindow, Settings* ObjectSettings, double* GlobalTimeAsSeconds, unsigned long long int* GlobalTimeAsMicroseconds) {
 
 	//---> Передача аргументов.
-	//=======================================================================================================================//
+	//========================================================================================================================//
 	this->MainWindow = MainWindow;
 	this->GlobalTimeAsSeconds = GlobalTimeAsSeconds;
 	this->GlobalTimeAsMicroseconds = GlobalTimeAsMicroseconds;
 	this->ObjectSettings = ObjectSettings;
 
 	//---> Загрузка историй из текстового файла и шрифта.
-	//=======================================================================================================================//
+	//========================================================================================================================//
 	Book = DUBLIB::GetMarkeredStringsArrayFromFile(L"Data\\Local\\" + ObjectSettings->Local.AsWstring() + L".txt", L"intro");
 	TextFont.loadFromFile("Data\\Fonts\\" + ObjectSettings->Font.AsString());
 
 	//---> Загрузка иллюстраций и установка их положения по центру экрана. 
-	//=======================================================================================================================//
-	//Буферы.
+	//========================================================================================================================//
+	// Буферы.
 	sf::Texture BufferTexture;
 	sf::Sprite BufferSprite;
 	std::string Path;
-	//Обработка загрузки и позиционирования.
+	// Обработка загрузки и позиционирования.
 	for (unsigned int i = 0; i < 9; i++) {
 		Path = "Data\\Texturepacks\\" + ObjectSettings->Texturepack.AsString() + "\\Story\\Story" + DUBLIB::ConvertNumberToString(i + 1) + ".png";
 
@@ -71,12 +71,12 @@ Intro::Intro(sf::RenderWindow* MainWindow, Settings* ObjectSettings, double* Glo
 		StorySprites[i].setOrigin(StorySprites[i].getLocalBounds().width / 2, StorySprites[i].getLocalBounds().height / 2);
 		StorySprites[i].setPosition((float)MainWindow->getSize().x / 2, (float)MainWindow->getSize().y / 2);
 	}
-	//Формирование чёрного прямоугольника для анимации.
+	// Формирование чёрного прямоугольника для анимации.
 	BlackRect.setSize(sf::Vector2f(MainWindow->getSize().x, MainWindow->getSize().y));
 	
 	//---> Генерация лейблов.
-	//=======================================================================================================================//
-	//Заполнение вектора шаблонами.
+	//========================================================================================================================//
+	// Заполнение вектора шаблонами.
 	CenteredLabel* CL_Bufer = new CenteredLabel;
 	for (unsigned int i = 0; i < 9; i++) {
 		StoryText.push_back(*CL_Bufer);
@@ -98,11 +98,11 @@ Intro::Intro(sf::RenderWindow* MainWindow, Settings* ObjectSettings, double* Glo
 	KP_Space.SetKey(sf::Keyboard::Space);
 }
 
-//Запускает вступительный ролик. Возвращает false, если не удалось или возникли ошибки.
+// Запускает вступительный ролик. Возвращает false, если не удалось или возникли ошибки.
 bool Intro::Start() {
-	//Результат выполнения функции.
+	// Результат выполнения функции.
 	bool IsSuccessfully = true;
-	//Загрузка и воспроизведение трека.
+	// Загрузка и воспроизведение трека.
 	if (!IntroMusic.openFromFile("Data\\Sounds\\Intro.ogg")) IsSuccessfully = false;
 	IntroMusic.play();
 
@@ -111,7 +111,7 @@ bool Intro::Start() {
 	return IsSuccessfully;
 }
 
-//Останавливает вступительный ролик.
+// Останавливает вступительный ролик.
 void Intro::End(std::string To, std::string From) {
 	IntroMusic.stop();
 	ElapsedTime = 0;
@@ -127,47 +127,47 @@ void Intro::End(std::string To, std::string From) {
 	Answer.from = From;
 }
 
-//Выполнение цикла обновления класса.
+// Выполнение цикла обновления класса.
 LayoutAnswer Intro::Update() {
-	//Пока включен ролик.
+	// Пока включен ролик.
 	if (IsEnabled) {
-		//Если первый цикл, то проставить спрайтам указатели на текстуры.
+		// Если первый цикл, то проставить спрайтам указатели на текстуры.
 		if (ElapsedTime == 0) StorySprites[IllustrationIndex].setTexture(StoryTextures[IllustrationIndex]);
-		//Добавление времени кадра.
+		// Добавление времени кадра.
 		ElapsedTime += *GlobalTimeAsSeconds;
-		//Общий индекс кадров пролога.
+		// Общий индекс кадров пролога.
 		unsigned int FrameIndex = IllustrationIndex + BookIndex;
 
-		//Если пролог не закончился и прошло нужное время в секундах, то сменить кадр.
+		// Если пролог не закончился и прошло нужное время в секундах, то сменить кадр.
 		if (FrameIndex < 17 && ElapsedTime > EveryFrameTime[TimeIndex]) {
 			ElapsedTime -= EveryFrameTime[TimeIndex];
 			TimeIndex++;
 			IsAttenuationAnimationWasPlayed = false; StartAttenuationAnimation = false;
 			InitializeAppearancesAnimation();
-			//Если чётное, перелистнуть иллюстрацию, иначе перелистнуть часть пролога.
+			// Если чётное, перелистнуть иллюстрацию, иначе перелистнуть часть пролога.
 			if (FrameIndex % 2 == 0) BookIndex++; else {
-				//Перелистнуть кадр.
+				// Перелистнуть кадр.
 				IllustrationIndex++;
-				//Нужно для обновления ссылки на текстуру.
+				// Нужно для обновления ссылки на текстуру.
 				StorySprites[IllustrationIndex].setTexture(StoryTextures[IllustrationIndex]);
 			}
 		}
 
-		//Если последний кадр был отрисован, то завершить вступительный ролик, иначе отрисовывать.
+		// Если последний кадр был отрисован, то завершить вступительный ролик, иначе отрисовывать.
 		if (FrameIndex % 2 == 0 && BookIndex < 9) StoryText[BookIndex].Update();
 		if (FrameIndex % 2 != 0 && IllustrationIndex < 9) MainWindow->draw(StorySprites[IllustrationIndex]);
 
-		//Если до конца кадра осталось меньше 0.5 секунды, то начать анимацию затухания.
+		// Если до конца кадра осталось меньше 0.5 секунды, то начать анимацию затухания.
 		if (EveryFrameTime[TimeIndex] - ElapsedTime < 1.00 && !StartAttenuationAnimation && !IsAttenuationAnimationWasPlayed && FrameIndex < 17) {
 			IsAttenuationAnimationWasPlayed = true;
 			InitializeAttenuationAnimation();
 		}
 
-		//Проигрывание анимаций.
+		// Проигрывание анимаций.
 		if (StartAppearancesAnimation) PlayAppearancesAnimation();
 		if (StartAttenuationAnimation) PlayAttenuationAnimation();
 
-		//Обработка прерывания ролика по требованию пользователя.
+		// Обработка прерывания ролика по требованию пользователя.
 		if (KP_Space.Update()) SpaceWasPresed++;
 		if (SpaceWasPresed == 1) PressAnyKey.Update();
 		if (SpaceWasPresed == 2) End("menu", "intro");

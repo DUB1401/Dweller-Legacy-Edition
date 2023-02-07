@@ -36,29 +36,8 @@
     <ClCompile Include="Main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="TechSupport.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="Source.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="EvolvGen.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="GUI\Button.cpp">
-      <Filter>Исходные файлы\GUI</Filter>
-    </ClCompile>
     <ClCompile Include="GameComponents\Intro.cpp">
       <Filter>Исходные файлы\GameComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="GUI\KeystrokesProcessing.cpp">
-      <Filter>Исходные файлы\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="GUI\CenteredLabel.cpp">
-      <Filter>Исходные файлы\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="GUI\TextBox.cpp">
-      <Filter>Исходные файлы\GUI</Filter>
     </ClCompile>
     <ClCompile Include="GameComponents\Credits.cpp">
       <Filter>Исходные файлы\GameComponents</Filter>
@@ -75,31 +54,40 @@
     <ClCompile Include="GameComponents\WorldRenderer.cpp">
       <Filter>Исходные файлы\GameComponents</Filter>
     </ClCompile>
+    <ClCompile Include="GUI\Button\Button.cpp">
+      <Filter>Исходные файлы\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\CheckBox\CheckBox.cpp">
+      <Filter>Исходные файлы\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\TextBox\TextBox.cpp">
+      <Filter>Исходные файлы\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\ToggleButton\ToggleButton.cpp">
+      <Filter>Исходные файлы\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\KeystrokesProcessing\KeystrokesProcessing.cpp">
+      <Filter>Исходные файлы\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\CenteredLabel\CenteredLabel.cpp">
+      <Filter>Исходные файлы\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\EvolvGen.cpp">
+      <Filter>Исходные файлы\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LayoutsController.cpp">
+      <Filter>Исходные файлы\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TechSupport.cpp">
+      <Filter>Исходные файлы\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EvolvGen.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Source.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="GUI\Button.h">
-      <Filter>Файлы заголовков\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="GameComponents\Intro.h">
       <Filter>Файлы заголовков\GameComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="GUI\KeystrokesProcessing.h">
-      <Filter>Файлы заголовков\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="GUI\CenteredLabel.h">
-      <Filter>Файлы заголовков\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="GUI\TextBox.h">
-      <Filter>Файлы заголовков\GUI</Filter>
     </ClInclude>
     <ClInclude Include="GameComponents\Credits.h">
       <Filter>Файлы заголовков\GameComponents</Filter>
@@ -113,11 +101,35 @@
     <ClInclude Include="Source\Data.h">
       <Filter>Файлы заголовков\Source</Filter>
     </ClInclude>
-    <ClInclude Include="TechSupport.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="GameComponents\WorldRenderer.h">
       <Filter>Файлы заголовков\GameComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\ToggleButton\ToggleButton.h">
+      <Filter>Файлы заголовков\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\TextBox\TextBox.h">
+      <Filter>Файлы заголовков\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\CheckBox\CheckBox.h">
+      <Filter>Файлы заголовков\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Button\Button.h">
+      <Filter>Файлы заголовков\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\CenteredLabel\CenteredLabel.h">
+      <Filter>Файлы заголовков\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\KeystrokesProcessing\KeystrokesProcessing.h">
+      <Filter>Файлы заголовков\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\EvolvGen.h">
+      <Filter>Файлы заголовков\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LayoutsController.h">
+      <Filter>Файлы заголовков\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TechSupport.h">
+      <Filter>Файлы заголовков\Source</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

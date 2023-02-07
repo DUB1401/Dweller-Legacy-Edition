@@ -1,26 +1,26 @@
 #include "Credits.h"
 
 //---> Credits
-//=======================================================================================================================//
+//========================================================================================================================//
 
-//Закрытие титров.
+// Закрытие титров.
 void Credits::Close(std::string To, std::string From) {
 	Answer.to = To;
 	Answer.from = From;
 }
 
-//Конструктор: задаёт окно отрисовки технических данных.
+// Конструктор: задаёт окно отрисовки технических данных.
 Credits::Credits(sf::RenderWindow* MainWindow, CommunicationData* ComData, Settings* ObjectSettings, double* GlobalTimeAsSeconds) {
 
 	//---> Передача аргументов.
-	//=======================================================================================================================//
+	//========================================================================================================================//
 	this->MainWindow = MainWindow;
 	this->ComData = ComData;
 	this->ObjectSettings = ObjectSettings;
 	this->GlobalTimeAsSeconds = GlobalTimeAsSeconds;
 
 	//---> Загрузка титров и настройка текстовой области.
-	//=======================================================================================================================//
+	//========================================================================================================================//
 	TextFont.loadFromFile("Data\\Fonts\\" + ObjectSettings->Font.AsString());
 	TextBoxObject.setCharacterSize(18);
 	TextBoxObject.setDisplayedStringsCount(14);
@@ -30,9 +30,9 @@ Credits::Credits(sf::RenderWindow* MainWindow, CommunicationData* ComData, Setti
 	TextBoxObject.setOutline(sf::Color::Black, 0.5);
 	TextBoxObject.setParagraphsArray(DUBLIB::GetMarkeredStringsArrayFromFile(L"Data\\Local\\" + ObjectSettings->Local.AsWstring() + L".txt", L"credits"));
 	TextBoxObject.initialize(ComData->MainWindow, sf::Vector2u(MainWindow->getSize().x - 56, MainWindow->getSize().y));
-
+	
 	//---> Загрузка текстур.
-	//=======================================================================================================================//
+	//========================================================================================================================//
 	BorderAmountX = MainWindow->getSize().x / 48;
 	BorderAmountY = MainWindow->getSize().y / 28;
 	BorderTexture.loadFromFile("Data\\Texturepacks\\" + ObjectSettings->Texturepack.AsString() + "\\GUI\\border.png");
@@ -47,7 +47,7 @@ Credits::Credits(sf::RenderWindow* MainWindow, CommunicationData* ComData, Setti
 	EmblemSprite.setScale(MainWindow->getSize().y / EmblemTexture.getSize().y / 1.25, MainWindow->getSize().y / EmblemTexture.getSize().y / 1.25);
 
 	//---> Создание центрируемой надписи заголовка.
-	//=======================================================================================================================//
+	//========================================================================================================================//
 	CenteredLabelObject.SetCharacterSize(48);
 	CenteredLabelObject.SetFont(&TextFont);
 	CenteredLabelObject.SetLineSpacing(0);
@@ -55,11 +55,10 @@ Credits::Credits(sf::RenderWindow* MainWindow, CommunicationData* ComData, Setti
 	CenteredLabelObject.Initialize(MainWindow, DUBLIB::GetMarkeredStringFromFile(L"Data\\Local\\" + ObjectSettings->Local.AsWstring() + L".txt", L"credits-header"), sf::Vector2u(MainWindow->getSize().x, HeaderSprite.getTextureRect().height));
 
 	//---> Генерирование кнопки.
-	//=======================================================================================================================//
-	BT_Close.SetPosition(MainWindow->getSize().x - 80, 24);
-	BT_Close.SetSize(48, 48);
-	BT_Close.LoadTexture("Data\\Texturepacks\\" + ObjectSettings->Texturepack.AsString() + "\\GUI\\button_close_grey.png", 3);
-	BT_Close.Initialize(MainWindow);
+	//========================================================================================================================//
+	BT_Close.setPosition(MainWindow->getSize().x - 80, 24);
+	BT_Close.loadTexture("Data\\Texturepacks\\" + ObjectSettings->Texturepack.AsString() + "\\GUI\\button_close_grey.png", sf::Vector2u(48, 48), DUBGUI::Button::SlicingType::Triple);
+	BT_Close.initialize(MainWindow);
 
 	KP_Escape.SetKey(sf::Keyboard::Escape);
 
@@ -119,7 +118,7 @@ LayoutAnswer Credits::Update() {
 	if (Answer.Empty()) Answer.Clear();
 
 	// Отправка ответа для обработчика меню.
-	if (BT_Close.Update() == Button::Clicked || KP_Escape.Update()) Close("menu", "credits");
+	if (BT_Close.update() == DUBGUI::ObjectGUI::Status::Clicked || KP_Escape.Update()) Close("menu", "credits");
 
 	return Answer;
 }

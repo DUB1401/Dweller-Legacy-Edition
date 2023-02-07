@@ -1,22 +1,20 @@
 #pragma once
 
-#include "../EvolvGen.h"
-
-#include "../GUI/KeystrokesProcessing.h"
-#include "../GUI/CenteredLabel.h"
-#include "../GUI/TextBox.h"
-#include "../GUI/Button.h"
+#include "../GUI/KeystrokesProcessing/KeystrokesProcessing.h"
+#include "../GUI/CenteredLabel/CenteredLabel.h"
+#include "../GUI/TextBox/TextBox.h"
+#include "../GUI/Button/Button.h"
+#include "../GUI/EvolvGen.h"
 
 #include "../Source/Settings.h"
 #include "../Source/Data.h"
 
-// Титры.
-// TO-DO: скроллинг титров.
+// Об игре.
 class Credits {
 private:
 
 	//---> Данные.
-	//=======================================================================================================================//
+	//========================================================================================================================//
 	// Указатель на время последнего кадра в секундах.
 	double* GlobalTimeAsSeconds;
 	// Количество отрисовываемых фрагментов рамок по оси Х.
@@ -29,10 +27,10 @@ private:
 	Settings* ObjectSettings;
 
 	//---> Графические компоненты.
-	//=======================================================================================================================//
+	//========================================================================================================================//
 	// Указатель на окно отрисовки.
 	sf::RenderWindow* MainWindow;
-	//Структура коммуникаций с модулями.
+	// Структура коммуникаций с модулями.
 	CommunicationData* ComData;
 	// Текст титров.
 	std::vector<std::wstring> CreditsLines;
@@ -44,7 +42,7 @@ private:
 	sf::Texture BorderTexture;
 	// Спрайт рамок.
 	sf::Sprite BorderSprite;
-	//Текстура фона заголовка.
+	// Текстура фона заголовка.
 	sf::Texture HeaderTexture;
 	// Спрайт фона заголовка.
 	sf::Sprite HeaderSprite;
@@ -55,14 +53,14 @@ private:
 	// Спрайт фоновой эмблемы.
 	sf::Sprite EmblemSprite;
 	// Кнопка закрытия титров.
-	Button BT_Close;
+	DUBGUI::Button BT_Close;
 	// Обработчик закрытия по Escape.
 	KeystrokesProcessing KP_Escape;
 
 protected:
 
 	//---> Функции обработки.
-	//=======================================================================================================================//
+	//========================================================================================================================//
 	// Закрытие титров.
 	void Close(std::string To, std::string From);
 

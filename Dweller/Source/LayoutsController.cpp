@@ -1,71 +1,71 @@
-#include "Source.h"
+#include "../Source/LayoutsController.h"
 
 //---> LayoutsController
-//=======================================================================================================================//
+//========================================================================================================================//
 
-//Обновляет текущий слой.
+// Обновляет текущий слой.
 void LayoutsController::Processing() {
 	Answer.Clear();
 	switch (MenuUpdateIndex) {
 	case 0:
-		//Выход из игры.
+		// Выход из игры.
 		exit(EXIT_SUCCESS);
 		break;
 	case 1:
-		//Вступительный ролик.
+		// Вступительный ролик.
 		Answer = ObjectIntro->Update();
 		break;
 	case 2:
-		//Главное меню.
+		// Главное меню.
 		Answer = ObjectMainMenu->Update();
 		break;
 	case 3:
-		//Титры.
+		// Титры.
 		Answer = ObjectCredits->Update();
 		break;
 	case 4:
-		//Игра.
+		// Игра.
 		Answer = ObjectWorldRenderer->Update();
 		break;
 	}
 }
 
-//Выделить память.
+// Выделить память.
 void LayoutsController::AllocateMemory() {
-	//Выделение памяти: вступительный ролик.
+	// Выделение памяти: вступительный ролик.
 	if (Answer.to == "intro") { 
 		ObjectIntro = new Intro(MainWindow, ObjectSettings, GlobalTimeAsSeconds, GlobalTimeAsMicroseconds);
 		ObjectIntro->Start();
 	}
-	//Выделение памяти: главное меню.
+	// Выделение памяти: главное меню.
 	if (Answer.to == "menu") ObjectMainMenu = new MainMenu(MainWindow, ObjectSettings);
-	//Выделение памяти: титры.
+	// Выделение памяти: титры.
 	if (Answer.to == "credits") ObjectCredits = new Credits(MainWindow, ComData, ObjectSettings, GlobalTimeAsSeconds);
-	//Выделение памяти: игра.
+	// Выделение памяти: игра.
 	if (Answer.to == "game") ObjectWorldRenderer = new WorldRenderer(MainWindow, ObjectSettings, GlobalTimeAsSeconds);
 }
 
-//Освободить память.
+// Освободить память.
 void LayoutsController::FreeMemory() {
-	//Освобождение памяти: титры.
+	// Освобождение памяти: титры.
 	if (Answer.from == "intro") delete ObjectIntro;
-	//Освобождение памяти: главное меню.
+	// Освобождение памяти: главное меню.
 	if (Answer.from == "menu") delete ObjectMainMenu;
-	//Освобождение памяти: титры.
+	// Освобождение памяти: титры.
 	if (Answer.from == "credits") delete ObjectCredits;
 }
 
-//Устанавливает индекс целевого слоя на основе ответа.
+// Устанавливает индекс целевого слоя на основе ответа.
 void LayoutsController::SetNewUpdateIndex() {
-	//Если ответ не пустой, то обновить индекс.
+	// Если ответ не пустой, то обновить индекс.
 	if (!Answer.Empty()) MenuUpdateIndex = LayoutsDefinitions[Answer.to];
 }
 
-//Конструктор: инициалзиация объекта.
+// Конструктор: инициалзиация объекта.
 LayoutsController::LayoutsController(sf::RenderWindow* MainWindow, CommunicationData* ComData, Settings* ObjectSettings, double* GlobalTimeAsSeconds, double* GlobalTimeAsMiliseconds, unsigned long long int* GlobalTimeAsMicroseconds) {
 
 	//---> Передача аргументов.
-	//=======================================================================================================================//
+	//========================================================================================================================//
 	this->MainWindow = MainWindow;
 	this->ComData = ComData;
 	this->ObjectSettings = ObjectSettings;
@@ -74,7 +74,7 @@ LayoutsController::LayoutsController(sf::RenderWindow* MainWindow, Communication
 	this->GlobalTimeAsMicroseconds = GlobalTimeAsMicroseconds;
 
 	//---> Инициализация контейнера определений слоёв.
-	//=======================================================================================================================//
+	//========================================================================================================================//
 	LayoutsDefinitions["exit"] = 0;
 	LayoutsDefinitions["intro"] = 1;
 	LayoutsDefinitions["menu"] = 2;
@@ -82,17 +82,17 @@ LayoutsController::LayoutsController(sf::RenderWindow* MainWindow, Communication
 	LayoutsDefinitions["game"] = 4;
 
 	//---> Инициализация стартового слоя.
-	//=======================================================================================================================//
+	//========================================================================================================================//
 	Answer.to = "intro";
 	SetNewUpdateIndex();
 	AllocateMemory();
 	Answer.Clear();
 }
 
-//Обновление текущего слоя и его ответа.
+// Обновление текущего слоя и его ответа.
 void LayoutsController::Update() {
 	Processing();
-	//Если получен ответ, то обработать его.
+	// Если получен ответ, то обработать его.
 	if (!Answer.Empty()) {
 		SetNewUpdateIndex();
 		FreeMemory();

@@ -135,36 +135,40 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="EvolvGen.cpp" />
     <ClCompile Include="GameComponents\Credits.cpp" />
     <ClCompile Include="GameComponents\Intro.cpp" />
     <ClCompile Include="GameComponents\MainMenu.cpp" />
     <ClCompile Include="GameComponents\WorldRenderer.cpp" />
-    <ClCompile Include="GUI\CenteredLabel.cpp" />
-    <ClCompile Include="GUI\KeystrokesProcessing.cpp" />
-    <ClCompile Include="GUI\TextBox.cpp" />
-    <ClCompile Include="GUI\Button.cpp" />
+    <ClCompile Include="GUI\Button\Button.cpp" />
+    <ClCompile Include="GUI\CenteredLabel\CenteredLabel.cpp" />
+    <ClCompile Include="GUI\CheckBox\CheckBox.cpp" />
+    <ClCompile Include="GUI\EvolvGen.cpp" />
+    <ClCompile Include="GUI\KeystrokesProcessing\KeystrokesProcessing.cpp" />
+    <ClCompile Include="GUI\TextBox\TextBox.cpp" />
+    <ClCompile Include="GUI\ToggleButton\ToggleButton.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Source.cpp" />
     <ClCompile Include="Source\Data.cpp" />
+    <ClCompile Include="Source\LayoutsController.cpp" />
     <ClCompile Include="Source\Settings.cpp" />
-    <ClCompile Include="TechSupport.cpp" />
+    <ClCompile Include="Source\TechSupport.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EvolvGen.h" />
     <ClInclude Include="GameComponents\Credits.h" />
     <ClInclude Include="GameComponents\Intro.h" />
     <ClInclude Include="GameComponents\MainMenu.h" />
     <ClInclude Include="GameComponents\WorldRenderer.h" />
-    <ClInclude Include="GUI\CenteredLabel.h" />
-    <ClInclude Include="GUI\KeystrokesProcessing.h" />
-    <ClInclude Include="GUI\TextBox.h" />
-    <ClInclude Include="GUI\Button.h" />
+    <ClInclude Include="GUI\Button\Button.h" />
+    <ClInclude Include="GUI\CenteredLabel\CenteredLabel.h" />
+    <ClInclude Include="GUI\CheckBox\CheckBox.h" />
+    <ClInclude Include="GUI\EvolvGen.h" />
+    <ClInclude Include="GUI\KeystrokesProcessing\KeystrokesProcessing.h" />
+    <ClInclude Include="GUI\TextBox\TextBox.h" />
+    <ClInclude Include="GUI\ToggleButton\ToggleButton.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="Source.h" />
     <ClInclude Include="Source\Data.h" />
+    <ClInclude Include="Source\LayoutsController.h" />
     <ClInclude Include="Source\Settings.h" />
-    <ClInclude Include="TechSupport.h" />
+    <ClInclude Include="Source\TechSupport.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\x64\Debug\Data\Icons\icon24.ico" />

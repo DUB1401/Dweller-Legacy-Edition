@@ -1,8 +1,7 @@
-//#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
+// #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 
-#include "TechSupport.h"
-#include "Source.h"
-#include "GameComponents/Intro.h"
+#include "Source/LayoutsController.h"
+#include "Source/TechSupport.h"
 
 int main(int argc, char* argv[]) {
 	SetConsoleCP(CP_UTF8);
@@ -14,7 +13,7 @@ int main(int argc, char* argv[]) {
 
 	// Инициализация окна и фикс проблемы безрамочного окна.
 	sf::RenderWindow MainWindow;
-	if (ObjectSettings.Fullscreen) MainWindow.create(sf::VideoMode(ObjectSettings.WindowWidth, ObjectSettings.WindowHeight + 1), "Dweller: Legacy Edition", sf::Style::None);
+	if (ObjectSettings.Fullscreen) MainWindow.create(sf::VideoMode(ObjectSettings.WindowWidth, ObjectSettings.WindowHeight + 1), "Dweller: Legacy Edition", sf::Style::Fullscreen);
 	else MainWindow.create(sf::VideoMode(ObjectSettings.WindowWidth, ObjectSettings.WindowHeight), "Dweller: Legacy Edition", sf::Style::Close);
 	// Установка настроек окна: вертикальная синхронизация и ограничение FPS.
 	MainWindow.setVerticalSyncEnabled(ObjectSettings.VerticalSync);
@@ -36,11 +35,11 @@ int main(int argc, char* argv[]) {
 	ObjectCommunicationData.GlobalTimeAsMicroseconds = &GlobalTimeAsMicroseconds;
 	ObjectCommunicationData.MouseWheelScrollDelta = &MouseWheelScrollDelta;
 
-	//Установка значка в заголовке окна.
+	// Установка значка в заголовке окна.
 	HICON hicon = LoadIcon(GetModuleHandleA(NULL), MAKEINTRESOURCEW(103));
 	SendMessageA(MainWindow.getSystemHandle(), WM_SETICON, ICON_BIG, (LPARAM)hicon);
 
-	//Создание необходимых объектов игры.
+	// Создание необходимых объектов игры.
 	TechSupport* ObjTechSupport = new TechSupport(&MainWindow, &GlobalTimeAsSeconds);
 	LayoutsController ObjLayoutsController(&MainWindow, &ObjectCommunicationData, &ObjectSettings, &GlobalTimeAsSeconds, &GlobalTimeAsMilliseconds, &GlobalTimeAsMicroseconds);
 

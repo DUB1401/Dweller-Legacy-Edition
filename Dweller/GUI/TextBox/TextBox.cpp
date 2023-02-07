@@ -1,7 +1,7 @@
 #include "TextBox.h"
 
-// --->TextBox
-//======================================================================================================================// 
+//--->TextBox
+//======================================================================================================================//
 
 // Рассчитывает индекс нижней отображаемой строки.
 void TextBox::CalculateLowerDisplayedStringIndex() {
@@ -108,16 +108,16 @@ TextBox::TextBox() {
 
 }
 
-// Задаёт окно отрисовки и размеры блока отображения. Вызывать после установки всех параметров.
+// Инициализатор: задаёт окно отрисовки и размеры блока отображения. Вызывать после установки всех свойств.
 void TextBox::initialize(sf::RenderWindow* MainWindow, sf::Vector2u BlockSize) {
 
-	// ---> Передача аргументов.
-	//======================================================================================================================// 
+	//---> Передача аргументов.
+	//======================================================================================================================//
 	this->MainWindow = MainWindow;
 	this->BlockSize = BlockSize;
 
-	// ---> Генерация надписей.
-	//======================================================================================================================// 
+	//---> Генерация надписей.
+	//======================================================================================================================//
 	// Строки текста, разбитые для переноса.
 	std::vector<std::wstring> SplittedStringsArray;
 	// Для каждой строки проверить необходимость переноса и вставить символы новой строки при необходимости.
@@ -187,7 +187,7 @@ void TextBox::setOutline(sf::Color OutlineColor, float Thickness) {
 	this->Thickness = Thickness;
 }
 
-// Устанавливает размер символов.
+// Устанавливает размер символа в пикселях.
 void TextBox::setCharacterSize(unsigned int Size) {
 	this->CharacterSize = Size;
 }
@@ -197,20 +197,18 @@ void TextBox::setParagraphsArray(std::vector<std::wstring> StringsArray) {
 	this->StringsArray = StringsArray;
 }
 
-// Устанавливает количество отображаемых строк.
+// Устанавливает количество одновременно отображаемых строк.
 void TextBox::setDisplayedStringsCount(unsigned int DisplayedStringsCount) {
 	this->DisplayedStringsCount = DisplayedStringsCount;
 }
 
 // Прокручивает текст по переданному дельта-значению.
 void TextBox::scroll(int ScrollDelta) {
-	// Инвертирование прокрутки мыши.
-	ScrollDelta *= -1;
 
 	// Сложение текущего индекса верхней строки со сначением прокрутки.
-	UpperDisplayedStringIndex += ScrollDelta;
+	UpperDisplayedStringIndex += -ScrollDelta;
 	// Сложение текущего индекса нижней строки со сначением прокрутки.
-	LowerDisplayedStringIndex += ScrollDelta;
+	LowerDisplayedStringIndex += -ScrollDelta;
 
 	// Проверка отрицательного индекса верхней строки.
 	if (LowerDisplayedStringIndex < DisplayedStringsCount - 1) LowerDisplayedStringIndex = DisplayedStringsCount - 1;
