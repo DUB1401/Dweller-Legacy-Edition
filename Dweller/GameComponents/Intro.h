@@ -2,7 +2,7 @@
 
 #include "../GUI/EvolvGen.h"
 
-#include "../GUI/KeystrokesProcessing/KeystrokesProcessing.h"
+#include "../GUI/KeyboardProcessing/KeyboardProcessing.h"
 #include "../GUI/CenteredLabel/CenteredLabel.h"
 
 #include "../Source/Settings.h"
@@ -32,7 +32,7 @@ private:
 	// Индекс длительности кадра.
 	unsigned int TimeIndex = 0;
 	// Индекс длительности кадра.
-	std::vector<double> EveryFrameTime = { 3.5, 3.0, 4.0, 3.0, 4.0, 3.0, 5.5, 3.0, 4.0, 3.0, 4.0, 3.0, 3.5, 3.0, 3.5, 3.0, 6.0, 1.5 };
+	std::vector<double> EveryFrameTime = { 5.0, 5.5, 4.0, 5.5, 3.5, 4.0, 2.5, 6.5, 6.0, 3.5, 6.0, 4.0, 5.5, 3.5, 5.5, 4.0, 6.0, 1.5 };
 	// Включено ли воспроизведение.
 	bool IsEnabled = false;
 	// Коэффициент прозрачности для анимации затухания.
@@ -43,8 +43,8 @@ private:
 	bool StartAttenuationAnimation = false;
 	// Проигрывалась ли в этом кадре анимация затухания.
 	bool IsAttenuationAnimationWasPlayed = false;
-	// Обработчик нажатий пробела для пропуска ролика.
-	KeystrokesProcessing KP_Space;
+	// Обработчик взаимодействий с клавиатурой.
+	DUBGUI::KeyboardProcessing KeyboardProcessingObject;
 	// Количество нажатий пробела.
 	unsigned int SpaceWasPresed = 0;
 	// Ответ для обработчика слоёв.
@@ -61,13 +61,13 @@ private:
 	// Спрайты истории.
 	std::vector<sf::Sprite> StorySprites;
 	// Центрированные истории.
-	std::vector<CenteredLabel> StoryText;
+	std::vector<DUBGUI::CenteredLabel> StoryText;
 	// Шрифт надписей.
 	sf::Font TextFont;
 	// Чёрный прямоугольник для анимации затухания.
 	sf::RectangleShape BlackRect;
 	// Надпись для инструкции по прерыванию ролика.
-	CenteredLabel PressAnyKey;
+	DUBGUI::CenteredLabel PressAnyKey;
 
 protected:
 

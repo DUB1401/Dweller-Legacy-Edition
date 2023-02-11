@@ -66,9 +66,6 @@
     <ClCompile Include="GUI\ToggleButton\ToggleButton.cpp">
       <Filter>Исходные файлы\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="GUI\KeystrokesProcessing\KeystrokesProcessing.cpp">
-      <Filter>Исходные файлы\GUI</Filter>
-    </ClCompile>
     <ClCompile Include="GUI\CenteredLabel\CenteredLabel.cpp">
       <Filter>Исходные файлы\GUI</Filter>
     </ClCompile>
@@ -80,6 +77,12 @@
     </ClCompile>
     <ClCompile Include="Source\TechSupport.cpp">
       <Filter>Исходные файлы\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\MouseProcessing\MouseProcessing.cpp">
+      <Filter>Исходные файлы\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\KeyboardProcessing\KeyboardProcessing.cpp">
+      <Filter>Исходные файлы\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -119,9 +122,6 @@
     <ClInclude Include="GUI\CenteredLabel\CenteredLabel.h">
       <Filter>Файлы заголовков\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="GUI\KeystrokesProcessing\KeystrokesProcessing.h">
-      <Filter>Файлы заголовков\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="GUI\EvolvGen.h">
       <Filter>Файлы заголовков\Source</Filter>
     </ClInclude>
@@ -130,6 +130,15 @@
     </ClInclude>
     <ClInclude Include="Source\TechSupport.h">
       <Filter>Файлы заголовков\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\GUI.h">
+      <Filter>Файлы заголовков\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\MouseProcessing\MouseProcessing.h">
+      <Filter>Файлы заголовков\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\KeyboardProcessing\KeyboardProcessing.h">
+      <Filter>Файлы заголовков\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

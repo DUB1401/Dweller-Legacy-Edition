@@ -5,20 +5,6 @@
 
 namespace DUBGUI {
 
-	// Проверяет попадание курсора в область флаговой кнопки.
-	bool CheckBox::CheckMouseHover() {
-		// Сохранение координат мыши.
-		sf::Vector2i MouseCoords = sf::Mouse::getPosition(*MainWindow);
-		// Попадание по осям X и Y.
-		bool AxisX = false, AxisY = false;
-		// Проверка попадания по оси X.
-		if (MouseCoords.x > Position.x && MouseCoords.x < Position.x + Size.x * Scale.x) AxisX = true;
-		// Проверка попадания по оси Y.
-		if (MouseCoords.y > Position.y && MouseCoords.y < Position.y + Size.y * Scale.y) AxisY = true;
-		// Проверка полного попадания.
-		if (AxisX && AxisY) return true; else return false;
-	}
-
 	// Возвращает индекс спрайта в зависимости от настроек, статуса и значения.
 	unsigned int CheckBox::GetSpriteIndex() {
 		// Индекс спрайта.
@@ -54,28 +40,30 @@ namespace DUBGUI {
 			CheckBoxSprites[i].setPosition(Position);
 			CheckBoxSprites[i].setScale(Scale);
 		}
+
+		// Настройка обработчика взаимодействия с мышью.
+		MouseProcessingObject.setPosition(Position);
+		MouseProcessingObject.setScale(Scale);
+		MouseProcessingObject.setSize(Size);
+		MouseProcessingObject.initialize(MainWindow);
 	}
 
-	// Устанавливает позицию в окне.
-	void CheckBox::setPosition(sf::Vector2f Position) {
-		this->Position = Position;
-		FlagSprite.setPosition(Position.x, Position.y + FlagTexture.getSize().y);
+	// Возвращает значение флаговой кнопки.
+	bool CheckBox::getValue() {
+		return CheckBoxValue;
 	}
 
-	// Устанавливает позицию в окне.
-	void CheckBox::setPosition(float PositionX, float PositionY) {
-		this->Position = sf::Vector2f(PositionX, PositionY);
-		FlagSprite.setPosition(Position.x, Position.y + FlagTexture.getSize().y);
-	}
+	// Загружает текстуру флага. Текстура флага может быть больше размера флаговой кнопки.
+	bool CheckBox::loadFlagTexture(std::string Path) {
 
-	// Устанавливает масштаб спрайта флаговой кнопки. Не применяется к спрайту флага.
-	void CheckBox::setScale(float Scale) {
-		this->Scale = sf::Vector2f(Scale, Scale);
-	}
-
-	// Устанавливает масштаб спрайта флага. Не применяется к спрайту флаговой кнопки.
-	void CheckBox::setFlagScale(float FlagScale) {
-		this->Scale = sf::Vector2f(FlagScale, FlagScale);
+		// Проверка загрузки текстуры.
+		if (FlagTexture.loadFromFile(Path)) {
+			FlagSprite.setTexture(FlagTexture);
+			FlagSprite.setOrigin(0, FlagTexture.getSize().y);
+			FlagSprite.setPosition(Position.x, Position.y + FlagTexture.getSize().y);
+			return true;
+		}
+		else return false;
 	}
 
 	// Загружает текстуру флаговой кнопки и разрезает её на спрайты согласно выбранному режиму.
@@ -131,63 +119,42 @@ namespace DUBGUI {
 		else return false;
 	}
 
-	// Загружает текстуру флага. Текстура флага может быть больше размера флаговой кнопки.
-	bool CheckBox::loadFlagTexture(std::string Path) {
-
-		// Проверка загрузки текстуры.
-		if (FlagTexture.loadFromFile(Path)) {
-			FlagSprite.setTexture(FlagTexture);
-			FlagSprite.setOrigin(0, FlagTexture.getSize().y);
-			FlagSprite.setPosition(Position.x, Position.y + FlagTexture.getSize().y);
-			return true;
-		}
-		else return false;
+	// Устанавливает масштаб спрайта флага. Не применяется к спрайту флаговой кнопки.
+	void CheckBox::setFlagScale(float FlagScale) {
+		this->Scale = sf::Vector2f(FlagScale, FlagScale);
 	}
 
-	// Возвращает значение флаговой кнопки.
-	bool CheckBox::getValue() {
-		return CheckBoxValue;
+	// Устанавливает позицию в окне.
+	void CheckBox::setPosition(float PositionX, float PositionY) {
+		this->Position = sf::Vector2f(PositionX, PositionY);
+		FlagSprite.setPosition(Position.x, Position.y + FlagTexture.getSize().y);
 	}
 
-	// Устанавливает значение флаговой кнопки.
+	// Устанавливает позицию в окне.
+	void CheckBox::setPosition(sf::Vector2f Position) {
+		this->Position = Position;
+		FlagSprite.setPosition(Position.x, Position.y + FlagTexture.getSize().y);
+	}
+
+	// Устанавливает масштаб спрайта флаговой кнопки. Не применяется к спрайту флага.
+	void CheckBox::setScale(float Scale) {
+		this->Scale = sf::Vector2f(Scale, Scale);
+	}
+
+	// Устанавливает логическое значение флаговой кнопки.
 	void CheckBox::setValue(bool Value) {
 		CheckBoxValue = Value;
 	}
 
-	// Отрисовывание и обновление флаговой кнопки.
+	// Отрисовывает и обновляет флаговую кнопку.
 	CheckBox::Status CheckBox::update() {
 
-		// Если курсор попадает на флаговую кнопку.
-		if (CheckMouseHover()) {
-			// Если ЛКМ не нажата.
-			if (!sf::Mouse::isButtonPressed(sf::Mouse::Left) && !CheckBoxWasPressed) {
-				CheckBoxStatus = Status::Hover;
-				CheckBoxWasPressedOnAway = false;
-			}
-
-			// Если ЛКМ нажата сейчас, а в прошлом цикле – нет.
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !CheckBoxWasPressed && !CheckBoxWasPressedOnAway) {
-				CheckBoxWasPressed = true;
-				CheckBoxStatus = Status::Active;
-			}
-
-			// Если ЛКМ была нажата в прошлом цикле, а сейчас – нет.
-			if (!sf::Mouse::isButtonPressed(sf::Mouse::Left) && CheckBoxWasPressed && !CheckBoxWasPressedOnAway) {
-				CheckBoxWasPressed = false;
-				CheckBoxStatus = Status::Clicked;
-				CheckBoxValue = DUBLIB::InvertBool(CheckBoxValue);
-			}
-		}
-		else {
-			CheckBoxStatus = Status::Normal;
-			// Фикс срабатывания флаговой кнопки в случае, когда зажатая ЛКМ уходит с области фокуса.
-			CheckBoxWasPressed = false;
-			// Фикс срабатывания флаговой кнопки в случае, когда зажатая ЛКМ приходит в область фокуса.
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !CheckBoxWasPressedOnAway) CheckBoxWasPressedOnAway = true;
-		}
-
+		// Отрисовка флаговой кнопки и флага.
 		MainWindow->draw(CheckBoxSprites[GetSpriteIndex()]);
 		if (CheckBoxValue) MainWindow->draw(FlagSprite);
+
+		// Обновление статуса флаговой кнопки.
+		CheckBoxStatus = MouseProcessingObject.updateMouseButton(sf::Mouse::Left);
 
 		return CheckBoxStatus;
 	}

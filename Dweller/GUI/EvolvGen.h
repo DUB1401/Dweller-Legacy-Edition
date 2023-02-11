@@ -1,14 +1,15 @@
 #pragma once
 
-#pragma warning(disable : 4244)
-#pragma warning(disable : 4305)
-#pragma warning(disable : 4267)
 #pragma warning(disable : 4018)
+#pragma warning(disable : 4244)
+#pragma warning(disable : 4267)
+#pragma warning(disable : 4305)
 
-#define Cout std::cout
 #define Wout std::wcout
-#define Cin std::cin
+#define Cout std::cout
 #define Endl std::endl
+#define Cin std::cin
+
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>

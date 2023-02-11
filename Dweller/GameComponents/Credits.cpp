@@ -30,7 +30,7 @@ Credits::Credits(sf::RenderWindow* MainWindow, CommunicationData* ComData, Setti
 	TextBoxObject.setOutline(sf::Color::Black, 0.5);
 	TextBoxObject.setParagraphsArray(DUBLIB::GetMarkeredStringsArrayFromFile(L"Data\\Local\\" + ObjectSettings->Local.AsWstring() + L".txt", L"credits"));
 	TextBoxObject.initialize(ComData->MainWindow, sf::Vector2u(MainWindow->getSize().x - 56, MainWindow->getSize().y));
-	
+
 	//---> Загрузка текстур.
 	//========================================================================================================================//
 	BorderAmountX = MainWindow->getSize().x / 48;
@@ -48,11 +48,10 @@ Credits::Credits(sf::RenderWindow* MainWindow, CommunicationData* ComData, Setti
 
 	//---> Создание центрируемой надписи заголовка.
 	//========================================================================================================================//
-	CenteredLabelObject.SetCharacterSize(48);
-	CenteredLabelObject.SetFont(&TextFont);
-	CenteredLabelObject.SetLineSpacing(0);
-	CenteredLabelObject.SetStyle(sf::Text::Style::Bold);
-	CenteredLabelObject.Initialize(MainWindow, DUBLIB::GetMarkeredStringFromFile(L"Data\\Local\\" + ObjectSettings->Local.AsWstring() + L".txt", L"credits-header"), sf::Vector2u(MainWindow->getSize().x, HeaderSprite.getTextureRect().height));
+	CenteredLabelObject.setCharacterSize(48);
+	CenteredLabelObject.setFont(&TextFont);
+	CenteredLabelObject.setStyle(sf::Text::Style::Bold);
+	CenteredLabelObject.initialize(MainWindow, DUBLIB::GetMarkeredStringFromFile(L"Data\\Local\\" + ObjectSettings->Local.AsWstring() + L".txt", L"credits-header"), sf::Vector2u(MainWindow->getSize().x, HeaderSprite.getTextureRect().height));
 
 	//---> Генерирование кнопки.
 	//========================================================================================================================//
@@ -60,7 +59,7 @@ Credits::Credits(sf::RenderWindow* MainWindow, CommunicationData* ComData, Setti
 	BT_Close.loadTexture("Data\\Texturepacks\\" + ObjectSettings->Texturepack.AsString() + "\\GUI\\button_close_grey.png", sf::Vector2u(48, 48), DUBGUI::Button::SlicingType::Triple);
 	BT_Close.initialize(MainWindow);
 
-	KP_Escape.SetKey(sf::Keyboard::Escape);
+	KeyboardProcessingObject.setKey(sf::Keyboard::Escape);
 
 }
 
@@ -76,7 +75,7 @@ LayoutAnswer Credits::Update() {
 	// Отрисовка фона заголовка.
 	MainWindow->draw(HeaderSprite);
 	// Отрисовка заголовка.
-	CenteredLabelObject.Update();
+	CenteredLabelObject.update();
 
 	// Отрисовка верхней рамки. Сдвиг на 12px для симметрии.
 	BorderSprite.setTextureRect(sf::IntRect(0, 0, 48, 28));
@@ -118,7 +117,7 @@ LayoutAnswer Credits::Update() {
 	if (Answer.Empty()) Answer.Clear();
 
 	// Отправка ответа для обработчика меню.
-	if (BT_Close.update() == DUBGUI::ObjectGUI::Status::Clicked || KP_Escape.Update()) Close("menu", "credits");
+	if (BT_Close.update() == DUBGUI::ObjectGUI::Status::Clicked || KeyboardProcessingObject.updateKey(sf::Keyboard::Escape)) Close("menu", "credits");
 
 	return Answer;
 }

@@ -124,6 +124,7 @@
       <PreprocessorDefinitions>SFML_DYNAMIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\DUB1401\Source\SFML 2.5.1 х64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,7 +144,8 @@
     <ClCompile Include="GUI\CenteredLabel\CenteredLabel.cpp" />
     <ClCompile Include="GUI\CheckBox\CheckBox.cpp" />
     <ClCompile Include="GUI\EvolvGen.cpp" />
-    <ClCompile Include="GUI\KeystrokesProcessing\KeystrokesProcessing.cpp" />
+    <ClCompile Include="GUI\KeyboardProcessing\KeyboardProcessing.cpp" />
+    <ClCompile Include="GUI\MouseProcessing\MouseProcessing.cpp" />
     <ClCompile Include="GUI\TextBox\TextBox.cpp" />
     <ClCompile Include="GUI\ToggleButton\ToggleButton.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -161,7 +163,9 @@
     <ClInclude Include="GUI\CenteredLabel\CenteredLabel.h" />
     <ClInclude Include="GUI\CheckBox\CheckBox.h" />
     <ClInclude Include="GUI\EvolvGen.h" />
-    <ClInclude Include="GUI\KeystrokesProcessing\KeystrokesProcessing.h" />
+    <ClInclude Include="GUI\GUI.h" />
+    <ClInclude Include="GUI\KeyboardProcessing\KeyboardProcessing.h" />
+    <ClInclude Include="GUI\MouseProcessing\MouseProcessing.h" />
     <ClInclude Include="GUI\TextBox\TextBox.h" />
     <ClInclude Include="GUI\ToggleButton\ToggleButton.h" />
     <ClInclude Include="resource.h" />

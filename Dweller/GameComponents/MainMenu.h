@@ -54,7 +54,7 @@ private:
 	// Кнопка «выйти из игры».
 	DUBGUI::Button BT_Exit;
 	// Подписи кнопок.
-	CenteredLabel CL_Description;
+	DUBGUI::CenteredLabel CL_Description;
 	// Шрифт текста.
 	sf::Font TextFont;
 	// Версия игры.

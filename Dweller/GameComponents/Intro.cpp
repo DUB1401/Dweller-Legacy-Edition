@@ -77,25 +77,25 @@ Intro::Intro(sf::RenderWindow* MainWindow, Settings* ObjectSettings, double* Glo
 	//---> Генерация лейблов.
 	//========================================================================================================================//
 	// Заполнение вектора шаблонами.
-	CenteredLabel* CL_Bufer = new CenteredLabel;
+	DUBGUI::CenteredLabel* CL_Bufer = new DUBGUI::CenteredLabel;
 	for (unsigned int i = 0; i < 9; i++) {
 		StoryText.push_back(*CL_Bufer);
-		StoryText[i].SetCharacterSize(32);
-		StoryText[i].SetFont(&TextFont);
-		StoryText[i].SetStyle(sf::Text::Style::Italic);
-		StoryText[i].SetUsedSpace(0.70);
-		StoryText[i].SetLineSpacing(0.35);
-		StoryText[i].Initialize(MainWindow, Book[i], MainWindow->getSize());
+		StoryText[i].setCharacterSize(32);
+		StoryText[i].setFont(&TextFont);
+		StoryText[i].setStyle(sf::Text::Style::Italic);
+		StoryText[i].setUsedSpace(0.70);
+		StoryText[i].setLineSpacing(0.35);
+		StoryText[i].initialize(MainWindow, Book[i], MainWindow->getSize());
 	}
 	delete CL_Bufer;
 
-	PressAnyKey.SetCharacterSize(18);
-	PressAnyKey.SetFont(&TextFont);
-	PressAnyKey.SetStyle(sf::Text::Style::Italic);
-	PressAnyKey.SetPosition(0, MainWindow->getSize().y * 0.95);
-	PressAnyKey.Initialize(MainWindow, DUBLIB::GetMarkeredStringFromFile(L"Data\\Local\\" + ObjectSettings->Local.AsWstring() + L".txt", L"press-anykey"), sf::Vector2u(MainWindow->getSize().x, 20));
+	PressAnyKey.setCharacterSize(18);
+	PressAnyKey.setFont(&TextFont);
+	PressAnyKey.setStyle(sf::Text::Style::Italic);
+	PressAnyKey.setPosition(0, MainWindow->getSize().y * 0.95);
+	PressAnyKey.initialize(MainWindow, DUBLIB::GetMarkeredStringFromFile(L"Data\\Local\\" + ObjectSettings->Local.AsWstring() + L".txt", L"press-anykey"), sf::Vector2u(MainWindow->getSize().x, 20));
 
-	KP_Space.SetKey(sf::Keyboard::Space);
+	KeyboardProcessingObject.setKey(sf::Keyboard::Space);
 }
 
 // Запускает вступительный ролик. Возвращает false, если не удалось или возникли ошибки.
@@ -154,7 +154,7 @@ LayoutAnswer Intro::Update() {
 		}
 
 		// Если последний кадр был отрисован, то завершить вступительный ролик, иначе отрисовывать.
-		if (FrameIndex % 2 == 0 && BookIndex < 9) StoryText[BookIndex].Update();
+		if (FrameIndex % 2 == 0 && BookIndex < 9) StoryText[BookIndex].update();
 		if (FrameIndex % 2 != 0 && IllustrationIndex < 9) MainWindow->draw(StorySprites[IllustrationIndex]);
 
 		// Если до конца кадра осталось меньше 0.5 секунды, то начать анимацию затухания.
@@ -168,8 +168,8 @@ LayoutAnswer Intro::Update() {
 		if (StartAttenuationAnimation) PlayAttenuationAnimation();
 
 		// Обработка прерывания ролика по требованию пользователя.
-		if (KP_Space.Update()) SpaceWasPresed++;
-		if (SpaceWasPresed == 1) PressAnyKey.Update();
+		if (KeyboardProcessingObject.updateKey(sf::Keyboard::Space)) SpaceWasPresed++;
+		if (SpaceWasPresed == 1) PressAnyKey.update();
 		if (SpaceWasPresed == 2) End("menu", "intro");
 
 	}

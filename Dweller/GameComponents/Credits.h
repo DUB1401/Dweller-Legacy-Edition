@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../GUI/KeystrokesProcessing/KeystrokesProcessing.h"
+#include "../GUI/KeyboardProcessing/KeyboardProcessing.h"
 #include "../GUI/CenteredLabel/CenteredLabel.h"
 #include "../GUI/TextBox/TextBox.h"
 #include "../GUI/Button/Button.h"
@@ -37,7 +37,7 @@ private:
 	// Шрифт надписей.
 	sf::Font TextFont;
 	// Текстовый контейнер.
-	TextBox TextBoxObject;
+	DUBGUI::TextBox TextBoxObject;
 	// Текстура рамок.
 	sf::Texture BorderTexture;
 	// Спрайт рамок.
@@ -47,15 +47,15 @@ private:
 	// Спрайт фона заголовка.
 	sf::Sprite HeaderSprite;
 	// Центрируемая надпись заголовка.
-	CenteredLabel CenteredLabelObject;
+	DUBGUI::CenteredLabel CenteredLabelObject;
 	// Текстура фоновой эмблемы.
 	sf::Texture EmblemTexture;
 	// Спрайт фоновой эмблемы.
 	sf::Sprite EmblemSprite;
 	// Кнопка закрытия титров.
 	DUBGUI::Button BT_Close;
-	// Обработчик закрытия по Escape.
-	KeystrokesProcessing KP_Escape;
+	// Обработчик взаимодействий с клавиатурой.
+	DUBGUI::KeyboardProcessing KeyboardProcessingObject;
 
 protected:
 

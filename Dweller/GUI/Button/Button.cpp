@@ -5,20 +5,6 @@
 
 namespace DUBGUI {
 
-	// Проверяет попадание курсора в область кнопки.
-	bool Button::CheckMouseHover() {
-		// Сохранение координат мыши.
-		sf::Vector2i MouseCoords = sf::Mouse::getPosition(*MainWindow);
-		// Попадание по осям X и Y.
-		bool AxisX = false, AxisY = false;
-		// Проверка попадания по оси X.
-		if (MouseCoords.x > Position.x && MouseCoords.x < Position.x + Size.x * Scale.x) AxisX = true;
-		// Проверка попадания по оси Y.
-		if (MouseCoords.y > Position.y && MouseCoords.y < Position.y + Size.y * Scale.y) AxisY = true;
-		// Проверка полного попадания.
-		if (AxisX && AxisY) return true; else return false;
-	}
-
 	// Возвращает индекс спрайта в зависимости от настроек, статуса и значения.
 	unsigned int Button::GetSpriteIndex() {
 		// Индекс спрайта.
@@ -44,7 +30,6 @@ namespace DUBGUI {
 
 	// Инициализатор: задаёт окно отрисовки. Вызывать после установки всех свойств и загрузки текстуры.
 	void Button::initialize(sf::RenderWindow* MainWindow) {
-
 		//---> Передача аргументов.
 		//========================================================================================================================//
 		this->MainWindow = MainWindow;
@@ -54,21 +39,12 @@ namespace DUBGUI {
 			ButtonSprites[i].setPosition(Position);
 			ButtonSprites[i].setScale(Scale);
 		}
-	}
 
-	// Устанавливает позицию в окне.
-	void Button::setPosition(sf::Vector2f Position) {
-		this->Position = Position;
-	}
-
-	// Устанавливает позицию в окне.
-	void Button::setPosition(float PositionX, float PositionY) {
-		this->Position = sf::Vector2f(PositionX, PositionY);
-	}
-
-	// Устанавливает масштаб спрайта.
-	void Button::setScale(float Scale) {
-		this->Scale = sf::Vector2f(Scale, Scale);
+		// Настройка обработчика взаимодействия с мышью.
+		MouseProcessingObject.setPosition(Position);
+		MouseProcessingObject.setScale(Scale);
+		MouseProcessingObject.setSize(Size);
+		MouseProcessingObject.initialize(MainWindow);
 	}
 
 	// Загружает текстуру кнопки и разрезает её на спрайты согласно выбранному режиму.
@@ -124,38 +100,28 @@ namespace DUBGUI {
 		else return false;
 	}
 
-	// Отрисовывание и обновление кнопки.
+	// Устанавливает позицию в окне.
+	void Button::setPosition(float PositionX, float PositionY) {
+		this->Position = sf::Vector2f(PositionX, PositionY);
+	}
+
+	// Устанавливает позицию в окне.
+	void Button::setPosition(sf::Vector2f Position) {
+		this->Position = Position;
+	}
+
+	// Устанавливает масштаб спрайта.
+	void Button::setScale(float Scale) {
+		this->Scale = sf::Vector2f(Scale, Scale);
+	}
+
+	// Отрисовывает и обновляет кнопку.
 	Button::Status Button::update() {
 
-		// Если курсор попадает на кнопку.
-		if (CheckMouseHover()) {
-			// Если ЛКМ не нажата.
-			if (!sf::Mouse::isButtonPressed(sf::Mouse::Left) && !ButtonWasPressed) { 
-				ButtonStatus = Status::Hover;
-				ButtonWasPressedOnAway = false;
-			}
-
-			// Если ЛКМ нажата сейчас, а в прошлом цикле – нет.
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !ButtonWasPressed && !ButtonWasPressedOnAway) {
-				ButtonWasPressed = true;
-				ButtonStatus = Status::Active;
-			}
-
-			// Если ЛКМ была нажата в прошлом цикле, а сейчас – нет.
-			if (!sf::Mouse::isButtonPressed(sf::Mouse::Left) && ButtonWasPressed && !ButtonWasPressedOnAway) {
-				ButtonWasPressed = false;
-				ButtonStatus = Status::Clicked;
-			}
-		}
-		else {
-			ButtonStatus = Status::Normal;
-			// Фикс срабатывания кнопки в случае, когда зажатая ЛКМ уходит с области фокуса.
-			ButtonWasPressed = false;
-			// Фикс срабатывания кнопки в случае, когда зажатая ЛКМ приходит в область фокуса.
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !ButtonWasPressedOnAway) ButtonWasPressedOnAway = true;
-		}
-
+		// Отрисовывание кнопки.
 		MainWindow->draw(ButtonSprites[GetSpriteIndex()]);
+		// Обновление статуса кнопки.
+		ButtonStatus = MouseProcessingObject.updateMouseButton(sf::Mouse::Left);
 
 		return ButtonStatus;
 	}

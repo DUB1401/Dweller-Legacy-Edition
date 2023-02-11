@@ -1,94 +1,112 @@
 #pragma once
 
+#include "../MouseProcessing/MouseProcessing.h"
 #include "../EvolvGen.h"
+#include "../GUI.h"
 
-// Центрируемая надпись.
-// TO-DO: обработка ошибок: высота надписи больше высоты блока, слово длиннее блока.
-class CenteredLabel {
-private:
+#include <numeric>
 
-	//---> Данные.
-	//========================================================================================================================//
-	// Координаты в окне.
-	sf::Vector2f WindowCoords = { 0.f, 0.f };
-	// Размер блока, внутри которого происходит выравнивание.
-	sf::Vector2u BlockSize;
-	// Центрируемая строка.
-	std::wstring Str;
-	// Используемое пространство ширины блока.
-	float UsedSpace = 1.f;
-	// Межстрочный интервал в долях размера символа.
-	float LineSpacing = 0.05;
-	// Положение начала блока.
-	sf::Vector2f Position = { 0, 0 };
-	// Ширина обводки.
-	float OutlineThickness = 0;
-	// Цвет обводки.
-	sf::Color OutlineColor = sf::Color::Black;
+namespace DUBGUI {
 
-	//---> Графические компоненты.
-	//========================================================================================================================//
-	// Указатель на окно отрисовки.
-	sf::RenderWindow* MainWindow;
-	// Цвет надписи.
-	sf::Color TextColor = sf::Color::White;
-	// Шрифт.
-	sf::Font* TextFont;
-	// Размер символа.
-	unsigned int CharacterSize = 12;
-	// Дополнительный стиль текста.
-	sf::Text::Style TextStyle;
-	// Вектор отрисовываемых строчек надписи.
-	std::vector<sf::Text> Label;
+	// Центрируемая надпись.
+	class CenteredLabel : public ObjectGUI {
+	private:
 
-protected:
+		//---> Данные.
+		//========================================================================================================================//
+		// Текущее состояние центрируемой надписи.
+		Status CenteredLabelStatus = Status::Normal;
+		// Положение начала блока.
+		sf::Vector2f Position = { 0.f, 0.f };
+		// Указатель на окно отрисовки.
+		sf::RenderWindow* MainWindow;
+		// Размер блока, внутрь которого происходит выравнивание.
+		sf::Vector2u BlockSize;
+		// Используемое пространство ширины блока.
+		float UsedSpace = 1.f;
+		// Центрируемая строка.
+		std::wstring Str;
 
-	//---> Функции обработки.
-	//========================================================================================================================//
-	// Позиционирование строки по середине блока.
-	void Centering();
-	// Применение стиля ко всем спрайтам надписи.
-	void AppendStyle();
+		//---> Свойства графических компонентов.
+		//========================================================================================================================//
+		// // Цвет обводки.
+		sf::Color OutlineColor = sf::Color::Black;
+		// Цвет надписи.
+		sf::Color TextColor = sf::Color::White;
+		// Размер символа.
+		unsigned int CharacterSize = 12;
+		// Ширина обводки.
+		float OutlineThickness = 0.f;
+		// Дополнительный стиль текста.
+		sf::Text::Style TextStyle;
+		// Межстрочный интервал в долях размера символа.
+		float LineSpacing = 0.f;
+		// Занимаемое надписью пространство в окне (используется для обработки взаимодействий с кнопками мыши).
+		sf::Vector2u OnWindowSpace;
+		// Координаты надписи (используются для обработки взаимодействий с кнопками мыши).
+		sf::Vector2f LabelCoords = { 0.f, 0.f };
 
-public:
+		//---> Графические компоненты.
+		//========================================================================================================================//
+		// Обработчик взаимодействий с кнопками мыши.
+		MouseProcessing MouseProcessingObject;
+		// Вектор отрисовываемых строчек надписи.
+		std::vector<sf::Text> Label;
+		// Шрифт.
+		sf::Font* TextFont;
 
-	// Конструктор: пустой.
-	CenteredLabel();
+	protected:
 
-	// Задаёт окно отрисовки, центрируемую строку и размеры блока отображения. Вызывать после установки всех стилей.
-	void Initialize(sf::RenderWindow* MainWindow, std::wstring Str, sf::Vector2u BlockSize);
+		//---> Функции обработки.
+		//========================================================================================================================//
+		// Подсчитывает занимаемое надписью пространство в окне и её координаты.
+		void CalculateOnWindowSpaceAndCoords();
+		// Позиционирует строки по середине блока.
+		void Centering();
+		// Применяет стили ко всем спрайтам надписи.
+		void AppendStyle();
 
-	// Передача указателя на шрифт.
-	void SetFont(sf::Font* TextFont);
+	public:
 
-	// Задаёт долю ширины блока, в которую нужно вписать текст (отступ от левого и правого края). По умолчанию 1.
-	void SetUsedSpace(float UsedSpace);
+		// Конструктор: пустой.
+		CenteredLabel();
 
-	// Устанавливает координаты блока.
-	void SetPosition(sf::Vector2f Postion);
+		// Инициализатор: задаёт окно отрисовки, центрируемую строку и размер блока отображения. Вызывать после установки всех свойств.
+		void initialize(sf::RenderWindow* MainWindow, std::wstring Str, sf::Vector2u BlockSize);
 
-	// Устанавливает координаты блока.
-	void SetPosition(float PostionX, float PostionY);
+		// Устанавливает размера символов.
+		void setCharacterSize(unsigned int Size);
 
-	// Установка цвета надписи. По умолчанию белый.
-	void SetColor(sf::Color TextColor);
+		// Устанавливает цвет надписи.
+		void setColor(sf::Color TextColor);
 
-	// Установка дополнительного стиля для текста.
-	void SetStyle(sf::Text::Style TextStyle);
+		// Устанавливает указатель на шрифт.
+		void setFont(sf::Font* TextFont);
 
-	// Устанавливает межстрочный интервал в долях размера символа. По умолчанию 0.05 для компенсации артефактов шрифта.
-	void SetLineSpacing(float LineSpacing);
+		// Устанавливает межстрочный интервал в долях от заданного шрифтом.
+		void setLineSpacing(float LineSpacing);
 
-	// Установка размера символов. По умолчанию равно 12.
-	void SetCharacterSize(unsigned int Size);
+		// Устанавливает цвет и толщину обводки.
+		void setOutline(sf::Color OutlineColor, float OutlineThickness);
 
-	// Задаёт обводку.
-	void SetOutline(sf::Color OutlineColor, float OutlineThickness);
+		// Устанавливает координаты блока.
+		void setPosition(float PostionX, float PostionY);
 
-	// Установка новой строки и перерасчёт выравнивания.
-	void SetString(std::wstring Str);
+		// Устанавливает координаты блока.
+		void setPosition(sf::Vector2f Postion);
 
-	// Отрисовка центрированной надписи.
-	void Update();
+		// Устанавливает долю ширины блока, в которую нужно вписать текст.
+		void setUsedSpace(float UsedSpace);
 
-};
+		// Устанавливает строку.
+		void setString(std::wstring Str);
+
+		// Устанавливает дополнительные стили.
+		void setStyle(sf::Text::Style TextStyle);
+
+		// Отрисовывает и обновляет центрируемую надпись.
+		Status update();
+
+	};
+
+}

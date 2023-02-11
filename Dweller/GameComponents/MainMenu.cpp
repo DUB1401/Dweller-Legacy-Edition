@@ -32,9 +32,9 @@ void MainMenu::ButtonInteraction(unsigned int Index) {
 		if (LastSoundEffectIndex == 0) {
 			PlaySoundEffect(Index);
 			LastSoundEffectIndex = Index + 1;
-			CL_Description.SetString(ButtonsLabels[Index]);
+			CL_Description.setString(ButtonsLabels[Index]);
 		}
-		CL_Description.Update();
+		CL_Description.update();
 	}
 }
 
@@ -108,12 +108,12 @@ MainMenu::MainMenu(sf::RenderWindow* MainWindow, Settings* ObjectSettings) {
 	ButtonsLabels = DUBLIB::GetMarkeredStringsArrayFromFile(L"Data\\Local\\" + ObjectSettings->Local.AsWstring() + L".txt", L"main-menu");
 	TextFont.loadFromFile("Data\\Fonts\\" + ObjectSettings->PixelFont.AsString());
 
-	CL_Description.SetFont(&TextFont);
-	CL_Description.SetPosition(0, MainWindow->getSize().y * 0.85);
-	CL_Description.SetCharacterSize(48);
-	CL_Description.SetStyle(sf::Text::Bold);
-	CL_Description.Initialize(MainWindow, L"", sf::Vector2u(MainWindow->getSize().x, MainWindow->getSize().y / 5));
-	CL_Description.SetOutline(sf::Color::Black, 2);
+	CL_Description.setFont(&TextFont);
+	CL_Description.setPosition(0, MainWindow->getSize().y * 0.85);
+	CL_Description.setCharacterSize(48);
+	CL_Description.setStyle(sf::Text::Bold);
+	CL_Description.initialize(MainWindow, L"", sf::Vector2u(MainWindow->getSize().x, MainWindow->getSize().y / 5));
+	CL_Description.setOutline(sf::Color::Black, 2);
 
 	GameVersion.setString(ObjectSettings->Version.AsString());
 	GameVersion.setCharacterSize(18);
